@@ -1,54 +1,28 @@
-import React from 'react';
-import logo from './logo.svg';
+import { useEffect } from 'react';
 import './App.css';
-import SignIn from './components/signIn/signIn';
-import NavBar from './components/sideBar/navBar';
-import { BrowserRouter, Route, Router, Routes } from 'react-router-dom';
-import MyAccount from './components/myAccount/myAccount';
-import Feed from './components/feed/feed';
-// import Login from './components/Login/Login';
-
+import SignIn from './pages/signIn';
+import { Route, Routes } from 'react-router-dom';
+import MyAccount from './pages/myAccount';
+import Feed from './pages/feed';
+import ProtectedRoute from './routing/ProtectedRoute';
+import { RoutesEnum } from './routing/routes.enum';
+import { initFlowbite } from 'flowbite';
+import SignUp from './pages/signUp';
 
 function App() {
+  useEffect(() => {
+    initFlowbite();
+  }, [])
   return (
-    <div className="App">
-       {/* <Router>
-      <Navigator />
-      <Switch>
-        <Route path="/MyAccount" component={MyAccount} />
-        <Route path="/Feed" component={Feed} />
-        <Route path="/Explore" component={Explore} />
-        <Route path="/SignOut" component={SignOut} />
-      </Switch>
-    </Router> */}
-
-<BrowserRouter>
       <Routes>
-        {/* <Route path="/" element={<Layout />}> */}
-        <Route path="MyAccount" element={<MyAccount />}></Route>
-          {/* <Route index element={<Home />} /> */}
-        <Route path="Feed" element={<Feed />} >
+        <Route element={<ProtectedRoute />}>
+          <Route index path={RoutesEnum.HOME} Component={Feed} />
+          <Route path={RoutesEnum.MYPAGE} Component={MyAccount} />
+          <Route path={RoutesEnum.FEED} Component={Feed} />
         </Route>
+        <Route path={RoutesEnum.SIGNIN} Component={SignIn} />
+        <Route path={RoutesEnum.SIGNUP} Component={SignUp} />
       </Routes>
-    </BrowserRouter>
-        <NavBar />
-        <SignIn />
-      {/* <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-
-          Learn React
-        </a>
-      </header> */}
-    </div>
   );
 }
 

@@ -1,9 +1,10 @@
+import Post from "../components/post";
 
 function MyAccount() {
 
   return (
-    <div >
-    hello yoav
+    <div>
+  <Post/>
   </div>
   );
 }

@@ -1,6 +1,5 @@
-import React from 'react';
 import ReactDOM from 'react-dom';
-import SignIn from './signIn';
+import SignIn from '../pages/signIn';
 
 it('It should mount', () => {
   const div = document.createElement('div');
