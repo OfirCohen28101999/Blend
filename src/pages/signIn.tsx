@@ -1,5 +1,8 @@
 import blendIcon from '../blendIcon.svg';
 
+let title = "Noteworthy technology acquisitions 2021";
+let content = "Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.";
+// let img = '../blendIcon.svg';
 function SignIn() {
   return (
     <div className="flex items-center justify-center mt-4 w-full">

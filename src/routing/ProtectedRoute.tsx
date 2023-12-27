@@ -25,7 +25,7 @@ const ProtectedRoute = () => {
   return isLoggedIn ? (
     <>
       <NavBar />
-        <Outlet />
+        <Outlet/>
     </>
   ) : (
     <Navigate to={RoutesEnum.SIGNIN} replace state={{ from: location }} />
