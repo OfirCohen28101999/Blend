@@ -1,36 +1,18 @@
 import Post from "../components/post";
 
-const postsInfo=["https://flowbite.s3.amazonaws.com/docs/gallery/square/image.jpg",
-            "https://flowbite.s3.amazonaws.com/docs/gallery/square/image-1.jpg",
-            "https://flowbite.s3.amazonaws.com/docs/gallery/square/image-2.jpg",
-            "https://flowbite.s3.amazonaws.com/docs/gallery/square/image-3.jpg",
-            "https://flowbite.s3.amazonaws.com/docs/gallery/square/image-4.jpg",
-            "https://flowbite.s3.amazonaws.com/docs/gallery/square/image-5.jpg",
-            "https://flowbite.s3.amazonaws.com/docs/gallery/square/image-6.jpg",
-            "https://flowbite.s3.amazonaws.com/docs/gallery/square/image-7.jpg",
-            "https://flowbite.s3.amazonaws.com/docs/gallery/square/image-8.jpg",
-            "https://flowbite.s3.amazonaws.com/docs/gallery/square/image-9.jpg",
-            "https://flowbite.s3.amazonaws.com/docs/gallery/square/image-10.jpg",
-            "https://flowbite.s3.amazonaws.com/docs/gallery/square/image-11.jpg"
-        ]
+const postsInfo = [{postTitle: "fj", postText: "d", postOwner:true},
+                 {postTitle: "Noteworthy technology acquisitions 2021", postText: "Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.", postOwner:true},
+                 {postTitle: "Noteworthy technology", postText: "Here are the order.", postOwner:false},
+                 {postTitle: "Noteworthy dljcnk", postText: "Here dlfjslk.", postOwner:false},
+                ];
 
-
-// {
-//   posts.map(post =>
-//       <div>
-//           <img className="h-auto max-w-full rounded-lg" src={post} alt=""/>
-//       </div>)
-// }
-
-function Feed() {
+export function Feed() {
   return (
-<div className="grid grid-cols-2 md:grid-cols-3 gap-4 mx-10">
-  {
-  postsInfo.map(postInfo =>
-     <Post/>
-      )
-  }
-</div>
+    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 ml-40 pl-5 pt-16">
+      {postsInfo.filter(postInfo => !postInfo.postOwner).map(notCurrUserPosts => (
+        <Post postTitle = {notCurrUserPosts.postTitle} postText = {notCurrUserPosts.postText} postOwner = {notCurrUserPosts.postOwner}/>
+      ))}
+    </div>
   );
 }
 
