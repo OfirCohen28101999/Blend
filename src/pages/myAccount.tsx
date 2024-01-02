@@ -20,7 +20,7 @@ function MyAccount() {
   const handleToggle = () => {
     setcreateNew((current) => !current);
   };
-
+  
   return (
     <div className="ml-40 pl-5 pt-16">
               {/* <div>
@@ -32,14 +32,12 @@ function MyAccount() {
  {!createNew && (
  <button type="button" className="mb-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-1/7 h-10 sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={handleToggle}>Create NewPost</button>
  )}
- <>
 {createNew && (
   <div>
    <button type="button" className="mb-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-1/7 h-10 sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={handleToggle}>cancle</button>
-      <EditPost postTitle = {null} postText = {null} creatingUser = {true}/>
+      <EditPost postTitle = {""} postText = {""} creatingUser = {true}/>
       </div>
       )}
-</>
  </div>
  <p className="mt-2 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"></p>
  <h5 className="mb-2 text-1xl font-bold tracking-tight text-gray-900 dark:text-white">My posts:</h5>

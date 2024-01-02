@@ -1,14 +1,20 @@
+import { useState } from 'react';
 import blendIcon from '../blendIcon.svg';
+import { PostProps } from './post';
 
-function EditPost(postInfo: any) {
+function EditPost(postInfo: PostProps) {
 
-  let currTitle = null;
-  let currText = null;
-  let currImg = null;
+    const [openModal, setOpenModal] = useState(false);
+
+    const [openModalsecond, setOpenModalsecond] = useState(false);
+  
+  let postTitle = null;
+  let postText = null;
+  let postImg = null;
   return (
     <div className="z-50 max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 z-50">    
 <div className="flex items-center justify-center w-full">
-    {(currImg == null) && (
+    {(postInfo.postImg == null) && (
     <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-20 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
         <div className="flex flex-col items-center justify-center">
             <svg className="w-8 h-6 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
@@ -20,23 +26,26 @@ function EditPost(postInfo: any) {
         <input id="dropzone-file" type="file" className="hidden" />
     </label>
     )}
-        {(currImg != null) && (
+        {(postInfo.postImg != null) && (
                <img className="rounded-t-lg h-20" src={blendIcon} alt="" />
 
    )}
 </div> 
 
 <div className="p-2 space-y-3">        
-        <textarea id="title" className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write your title here...">{currTitle}</textarea>
-        <textarea id="message" className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write your text here...">{currText}</textarea>
+        <textarea id="title" className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write your title here...">{postInfo.postTitle}</textarea>
+        <textarea id="message" className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write your text here...">{postInfo.postText}</textarea>
         <>
-        {(currTitle == null && currText == null && currImg == null) && (
+        {(postInfo.postTitle == "" && postInfo.postText == "" && postInfo.postImg == null) && (
         <button type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-1/7 h-10 sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Post</button>
         )}
         </>
         <>
-        {(currTitle != null || currText != null || currImg != null) && (
-        <button type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-1/7 h-10 sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Update</button>
+        {(postInfo.postTitle != "" || postInfo.postText != "" || postInfo.postImg != null) && (
+            <div>
+        <button type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-1/7 h-10 sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={() => setOpenModal(false)}>Update</button>
+        <button type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-1/7 h-10 sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={() => setOpenModal(false)}>Cancle</button>
+        </div>
         )}
         </>
 </div>
