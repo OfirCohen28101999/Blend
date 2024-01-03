@@ -1,20 +1,24 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import blendIcon from '../blendIcon.svg';
-import { Button, Modal } from 'flowbite-react';
+import { Modal } from 'flowbite-react';
 import EditPost from './EditPost';
+import { PostProps, CommentProps } from '../shared/types';
+import { postsComments } from '../shared/mock';
 
-export interface PostProps {
-  postTitle: string;
-  postText: string;
-  postImg?: string
-  creatingUser: boolean;
-}
 
-export function Post(postInfo: PostProps) {
+export function Post(postInfo: PostProps, postComments: CommentProps[]) {
 
   let commentsNum = 4;
-  let likesNum = 8;
-
+let currPostComments: CommentProps[] = [];
+let fj = postComments;
+useEffect(() => {
+  // This code will be executed after the component has been mounted
+  console.log('Component is mounted!');
+  currPostComments = getCommentsByPostId(postInfo.id, currPostComments);
+  console.log(currPostComments);
+  // You can perform any initialization logic or make API calls here
+}, []); // The empty dependency array ensures that this effect runs only once (equivalent to componentDidMount)
+ 
   const [likePostButton, setLikePost] = useState(false);
 
   const handleLikeToggle = () => {
@@ -25,6 +29,22 @@ export function Post(postInfo: PostProps) {
 
   const [openModalsecond, setOpenModalsecond] = useState(false);
 
+  function getUserNameById(): string {
+    //TODO: edit post and save to DB
+return "ofir";
+  }
+
+  function getCommentsByPostId(postId: number, currPostComments: CommentProps[]): CommentProps[] {
+    //TODO search in DB al the comments with the curr postId
+  let d = postId;
+  let index = 0;
+  //  currPostComments: CommentProps[] = [];
+   postsComments.filter((postComment) => postComment.postId == postId).map((postComment: CommentProps) => (
+    currPostComments[index] = postComment,
+    index++
+   ));
+    return currPostComments;
+  }
 
   function editPost(): void {
     //TODO: edit post and save to DB
@@ -55,12 +75,13 @@ export function Post(postInfo: PostProps) {
     // handleviewCommentsToggle();
    }
 
+ 
   return (
 <div className="h-80 w-64">
       <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
         <img className="rounded-t-lg h-20" src={blendIcon} alt="" />
         <div className="p-2">
-          <h5 className="mb-2 text-1xl font-bold tracking-tight text-gray-900 dark:text-white">{postInfo.postTitle}</h5>
+          <h5 className="mb-2 text-1xl font-bold tracking-tight text-gray-900 dark:text-white">{postInfo.id}</h5>
           <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">{postInfo.postText}</p>
           <>
             {postInfo.creatingUser && (
@@ -82,7 +103,7 @@ export function Post(postInfo: PostProps) {
                   <button className="inline-flex items-center px-2 py-1 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={unlikePost}>unlike</button>
                   )}
                   <button className="inline-flex items-center px-2 py-1 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={() => setOpenModal(true)} >{commentsNum} comments</button>
-                  <h5 className="font-normal text-gray-700 dark:text-gray-400">{likesNum} likes</h5>
+                  <h5 className="font-normal text-gray-700 dark:text-gray-400">{postInfo.postLikes} likes</h5>
                 </div>
                 <div className="flex">
                     <div className="relative w-full">
@@ -97,31 +118,29 @@ export function Post(postInfo: PostProps) {
       </div>    
       <>
       <Modal show={openModalsecond} onClose={() => setOpenModalsecond(false)}>
-      <EditPost postTitle = {"sdjn"} postText = {"sdb"} creatingUser = {true}/>
+      <EditPost id = {22} postTitle = {"sdjn"} postText = {"sdb"} creatingUser = {true} postLikes={4}/>
       </Modal>
     </>
       <>
       <Modal show={openModal} onClose={() => setOpenModal(false)}>
-        <Modal.Header>Post's comments</Modal.Header>
+        <Modal.Header className="p-1 ml-3">Post's comments</Modal.Header>
         <Modal.Body>
-          <div className="space-y-6">
+<>
+        {currPostComments.map((currPostComment:CommentProps) => (
+<div>
+          <div className="space-x-4 flex items-center">
             <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-              With less than a month to go before the European Union enacts new consumer privacy laws for its citizens,
-              companies around the world are updating their terms of service agreements to comply.
+              userNum1
             </p>
             <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-              The European Union’s General Data Protection Regulation (G.D.P.R.) goes into effect on May 25 and is meant
-              to ensure a common set of data rights in the European Union. It requires organizations to notify users as
-              soon as possible of high-risk data breaches that could personally affect them.
+            {currPostComment.commentText}
             </p>
           </div>
+          </div>
+        ))}
+        </>
         </Modal.Body>
-        <Modal.Footer>
-          <Button color="gray" onClick={() => setOpenModal(false)}>I accept</Button>
-          <Button color="gray" onClick={() => setOpenModal(false)}>
-            Decline
-          </Button>
-        </Modal.Footer>
+
       </Modal>
     </>  
     {/* <ViewComments  openModal={openModal === 0}

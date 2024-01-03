@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import blendIcon from '../blendIcon.svg';
-import { PostProps } from './post';
+import { PostProps } from '../shared/types';
 
 function EditPost(postInfo: PostProps) {
 
@@ -8,9 +8,6 @@ function EditPost(postInfo: PostProps) {
 
     const [openModalsecond, setOpenModalsecond] = useState(false);
   
-  let postTitle = null;
-  let postText = null;
-  let postImg = null;
   return (
     <div className="z-50 max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 z-50">    
 <div className="flex items-center justify-center w-full">
