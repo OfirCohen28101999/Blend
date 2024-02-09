@@ -5,17 +5,27 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.css';
 import { BrowserRouter } from 'react-router-dom';
-
+import { GoogleOAuthProvider } from '@react-oauth/google'
+// import { CookiesProvider } from 'react-cookie';
+// import AuthMiddleware from './Helpers/AuthMiddleware';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
+//clientId???????????????????????????????????????
+<GoogleOAuthProvider clientId="764938356434-9sg7heli6dv8nj6rlobhhjlq18ui5dpr.apps.googleusercontent.com">
   <React.StrictMode>
     <BrowserRouter>
-    <App />
-    </BrowserRouter>
+    {/* <CookiesProvider>
+          <AuthMiddleware> */}
+            <App />
+          {/* </AuthMiddleware>
+        </CookiesProvider>  */}
+           </BrowserRouter>
   </React.StrictMode>
+  </GoogleOAuthProvider>
+
 );
 
 // If you want to start measuring performance in your app, pass a function

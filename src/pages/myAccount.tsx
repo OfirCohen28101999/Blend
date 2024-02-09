@@ -27,7 +27,7 @@ function MyAccount() {
 {createNew && (
   <div>
    <button type="button" className="mb-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-1/7 h-10 sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={handleToggle}>cancle</button>
-      <EditPost id= {generateNewId}  postTitle = {""} postText = {""} creatingUser = {true} postLikes={0}/>
+      <EditPost id= {generateNewId}  title = {""} description = {""} creatingUser = {true}/>
       </div>
       )}
  </div>
@@ -36,7 +36,7 @@ function MyAccount() {
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
       {postsInfo.filter(postInfo => postInfo.creatingUser).map(currUserPost => (
         //postComments ={postsComments} send to Post
-        <Post id = {currUserPost.id} postTitle = {currUserPost.postTitle} postText = {currUserPost.postText} creatingUser = {currUserPost.creatingUser} postLikes={currUserPost.postLikes}/>
+        <Post id = {currUserPost.id} title = {currUserPost.title} description = {currUserPost.description} creatingUser = {currUserPost.creatingUser}/>
       ))}
     </div>
   </div>
