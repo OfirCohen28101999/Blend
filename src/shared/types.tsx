@@ -1,29 +1,44 @@
 export interface PostProps {
-    id: number;
-    title: string;
-    description: string;
+    _id: string,
+    title: string,
+    description: string,
     image?: string
-    creatingUser: boolean;
-    track?: TrackProps;
+    creatingUser: UserProps,
+    track: TrackProps,
+    createdAt?: Date,
+    updatedAt?: Date
   }
   
   export interface TrackProps {
+    _id: string,
     spotifyId: string,
     name: string,
     image: string,
     artistSpotifyId: string,
     artistName: string,
-    previewUrl: string
+    previewUrl: string,
+    createdAt: Date,
+    updatedAt: Date
   }
 
   export interface CommentProps {
-    // id: number;
+    _id: string;
+    title: string
     description: string;
-    postId: number
+    // postId: number
     userId: number;
-    // creatingUser: UserProps,
-    // post: PostProps,
-  }
+    creatingUser?: UserProps,
+    post?: PostProps,
+    createdAt?: Date;
+    updatedAt?: Date;
+    __v?: number;
+    }
+
+    export interface CreateCommentProps {
+      description: string,
+      postId: string,
+      title: string
+    }
 
   export interface UserProps {
     name?: string,
@@ -37,8 +52,33 @@ export interface PostProps {
     bio?: string
     accessToken?: string,
     refreshToken?: string
+    
+    _id?: string;
+    // id?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
+    __v?: number;
 }
 
 export interface SessionProps {
 
+}
+
+export interface secondpost {
+  posts:PostProps[]
+}
+export interface firstpost {
+  data:secondpost
+}
+
+export interface secondcomment {
+  comments:CommentProps[]
+}
+export interface firstcomment {
+  data:secondcomment
+}
+
+export interface GenericResponse {
+  status: string;
+  message: string;
 }

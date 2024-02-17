@@ -1,227 +1,216 @@
-import blendIcon from '../blendIcon.svg';
-import { ChangeEvent, useRef, useState } from 'react';
-import { signInUser } from '../services/user-service';
-import { UserProps } from '../shared/types';
-import { googleSignin } from '../services/user-service';
-import { CredentialResponse, GoogleLogin } from '@react-oauth/google';
+import { Box, Container, Typography, Link as MuiLink } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
+import { object, string, TypeOf } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import FormInput from '../components/FormInput';
+import { useEffect } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useLoginUserMutation } from '../services/api/authApi';
+import { ReactComponent as GoogleLogo } from '../google.svg';
+import { getGoogleUrl } from '../utils/getGoogleUrl';
+import { LoadingButton as _LoadingButton } from '@mui/lab';
+
+const LoadingButton = styled(_LoadingButton)`
+  padding: 0.6rem 0;
+  background-color: #f9d13e;
+  color: #2363eb;
+  font-weight: 500;
+
+  &:hover {
+    background-color: #ebc22c;
+    transform: translateY(-2px);
+  }
+`;
+
+const LinkItem = styled(Link)`
+  text-decoration: none;
+  color: #2363eb;
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
+const loginSchema = object({
+email: string()
+  .min(1, 'Email address is required')
+  .email('Email Address is invalid'),
+password: string()
+  .min(1, 'Password is required')
+  .min(8, 'Password must be more than 8 characters')
+  .max(32, 'Password must be less than 32 characters'),
+});
+
+export type LoginInput = TypeOf<typeof loginSchema>;
 
 function SignIn() {
-  const emailInputRef = useRef<HTMLInputElement>(null)
-  const passwordInputRef = useRef<HTMLInputElement>(null)
-  
-  const signIn = async () => {
-      // const url = await uploadPhoto(imgSrc!);
-      console.log("upload returned:" + 'url');
-      if (emailInputRef.current?.value && passwordInputRef.current?.value) {
-          const user: UserProps = {
-              email: emailInputRef.current?.value,
-              password: passwordInputRef.current?.value,
-          }
-          const res = await signInUser(user)
-          console.log(res)
-      }
-  }
 
-  const onGoogleLoginSuccess = async (credentialResponse: CredentialResponse) => {
-    console.log(credentialResponse)
-    try {
-        const res = await googleSignin(credentialResponse)
-        console.log(res)
-    } catch (e) {
-        console.log(e)
+  const methods = useForm<LoginInput>({
+    resolver: zodResolver(loginSchema),
+  });
+
+  // 👇 API Login Mutation
+  const [loginUser, { isLoading, isError, error, isSuccess }] =
+    useLoginUserMutation();
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const from = ((location.state as any)?.from.pathname as string) || '/';
+
+  const {
+    reset,
+    handleSubmit,
+    formState: { isSubmitSuccessful },
+  } = methods;
+
+  useEffect(() => {
+    if (isSuccess) {
+      navigate(from);
     }
-}
+  }, [isLoading]);
 
-const onGoogleLoginFailure = () => {
-    console.log("Google login failed")
-}
+  useEffect(() => {
+    if (isSubmitSuccessful) {
+      reset();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSubmitSuccessful]);
+
+  const onSubmitHandler: SubmitHandler<LoginInput> = (values) => {
+    // 👇 Executing the loginUser Mutation
+   loginUser(values);
+  };
 
   return (
-    <div className="flex items-center justify-center mt-4 w-full">
-      <section className="">
-        <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-          <a className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
-            <img className="w-8 h-8 mr-2" src={blendIcon} alt="logo" />
-            Blend
-          </a>
-          <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-            <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-              <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-                Sign in to your account
-              </h1>
-              <form className="space-y-4 md:space-y-6" action="#">
-                <div>
-                  <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
-                  <input ref={emailInputRef} type="email" name="email" id="email" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@company.com" />
-                </div>
-                <div>
-                  <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
-                  <input ref={passwordInputRef} type="password" name="password" id="password" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-start">
-                    <div className="flex items-center h-5">
-                      <input id="remember" aria-describedby="remember" type="checkbox" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800" />
-                    </div>
-                    <div className="ml-3 text-sm">
-                      <label htmlFor="remember" className="text-gray-500 dark:text-gray-300">Remember me</label>
-                    </div>
-                  </div>
-                  
-                </div>
-                <button type="submit" className="w-full text-white bg-primary hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800" onClick={signIn}>Sign in</button>
-                <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                  Don’t have an account yet? <a href="/sign-up" className="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign up</a>
-                </p>
-                <GoogleLogin onSuccess={onGoogleLoginSuccess} onError={onGoogleLoginFailure} />
+    <Container
+    maxWidth={false}
+    sx={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: '100vh',
+      backgroundColor: '#2363eb',
+    }}
+  >
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'column',
+      }}
+    >
+      <Typography
+        textAlign='center'
+        component='h1'
+        sx={{
+          color: '#f9d13e',
+          fontWeight: 600,
+          fontSize: { xs: '2rem', md: '3rem' },
+          mb: 2,
+          letterSpacing: 1,
+        }}
+      >
+        Welcome Back!
+      </Typography>
+      <Typography
+        variant='body1'
+        component='h2'
+        sx={{ color: '#e5e7eb', mb: 2 }}
+      >
+        Login to have access!
+      </Typography>
 
-              </form>
-            </div>
-          </div>
-        </div>
-      </section>
-    </div>
+      <FormProvider {...methods}>
+        <Box
+          component='form'
+          onSubmit={handleSubmit(onSubmitHandler)}
+          noValidate
+          autoComplete='off'
+          maxWidth='27rem'
+          width='100%'
+          sx={{
+            backgroundColor: '#e5e7eb',
+            p: { xs: '1rem', sm: '2rem' },
+            borderRadius: 2,
+          }}
+        >
+          <FormInput name='email' label='Email Address' type='email' />
+          <FormInput name='password' label='Password' type='password' />
+
+          <Typography
+            sx={{ fontSize: '0.9rem', mb: '1rem', textAlign: 'right' }}
+          >
+          </Typography>
+
+          <LoadingButton
+            variant='contained'
+            sx={{ mt: 1 }}
+            fullWidth
+            disableElevation
+            type='submit'
+            loading={isLoading}
+          >
+            <LinkItem to='/feed' style={{ color: '#333' }}>
+            Login
+            </LinkItem>
+
+          </LoadingButton>
+
+          <Typography sx={{ fontSize: '0.9rem', mt: '1rem' }}>
+            Need an account? <LinkItem to='/sign-up'>Sign Up Here</LinkItem>
+          </Typography>
+        </Box>
+      </FormProvider>
+      <Typography
+        variant='h6'
+        component='p'
+        sx={{
+          my: '1.5rem',
+          textAlign: 'center',
+          color: 'white',
+        }}
+      >
+        Log in with another provider:
+      </Typography>
+      <Box
+        maxWidth='27rem'
+        width='100%'
+        sx={{
+          backgroundColor: '#e5e7eb',
+          p: { xs: '1rem', sm: '2rem' },
+          borderRadius: 2,
+        }}
+      >
+        <MuiLink
+          href={getGoogleUrl(from)}
+          sx={{
+            backgroundColor: '#f5f6f7',
+            borderRadius: 1,
+            py: '0.6rem',
+            columnGap: '1rem',
+            textDecoration: 'none',
+            color: '#393e45',
+            cursor: 'pointer',
+            fontWeight: 500,
+            '&:hover': {
+              backgroundColor: '#fff',
+              boxShadow: '0 1px 13px 0 rgb(0 0 0 / 15%)',
+            },
+          }}
+          display='flex'
+          justifyContent='center'
+          alignItems='center'
+        >
+          <GoogleLogo style={{ height: '2rem' }} />
+          Google
+        </MuiLink>
+      </Box>
+    </Box>
+  </Container>
+
   );
-
-
-
-  // return (
-  //   <div className='signIn'>
-  //   <Formik
-  //     // validationSchema={schema}
-  //     onSubmit={console.log}
-  //     initialValues={{
-  //       firstName: '',
-  //       lastName: '',
-  //       username: '',
-  //       password: '',
-  //       favoriteTrack: '',
-  //       profilePicture: null
-  //     }}
-  //   >
-  //     {({ handleSubmit, handleChange, values, touched, errors }) => (
-  //       <Form noValidate onSubmit={handleSubmit}>
-  //         <Row className="mb-3">
-  //           <Form.Group
-  //             as={Col}
-  //             md="4"
-  //             controlId="validationFormik101"
-  //             className="position-relative"
-  //           >
-  //             <Form.Label>First name</Form.Label>
-  //             <Form.Control
-  //               type="text"
-  //               name="firstName"
-  //               value={values.firstName}
-  //               onChange={handleChange}
-  //               isValid={touched.firstName && !errors.firstName}
-  //             />
-  //             <Form.Control.Feedback tooltip>Looks good!</Form.Control.Feedback>
-  //           </Form.Group>
-  //           <Form.Group
-  //             as={Col}
-  //             md="4"
-  //             controlId="validationFormik102"
-  //             className="position-relative"
-  //           >
-  //             <Form.Label>Last name</Form.Label>
-  //             <Form.Control
-  //               type="text"
-  //               name="lastName"
-  //               value={values.lastName}
-  //               onChange={handleChange}
-  //               isValid={touched.lastName && !errors.lastName}
-  //             />
-
-  //             <Form.Control.Feedback tooltip>Looks good!</Form.Control.Feedback>
-  //           </Form.Group>
-  //           <Form.Group as={Col} md="4" controlId="validationFormikUsername2">
-  //             <Form.Label>Username</Form.Label>
-  //             <InputGroup hasValidation>
-  //               <InputGroup.Text id="inputGroupPrepend">@</InputGroup.Text>
-  //               <Form.Control
-  //                 type="text"
-  //                 placeholder="Username"
-  //                 aria-describedby="inputGroupPrepend"
-  //                 name="username"
-  //                 value={values.username}
-  //                 onChange={handleChange}
-  //                 isInvalid={!!errors.username}
-  //               />
-  //               <Form.Control.Feedback type="invalid" tooltip>
-  //                 {errors.username}
-  //               </Form.Control.Feedback>
-  //             </InputGroup>
-  //           </Form.Group>
-  //         </Row>
-  //         <Row className="mb-3">
-  //           <Form.Group
-  //             as={Col}
-  //             md="6"
-  //             controlId="validationFormik103"
-  //             className="position-relative"
-  //           >
-  //             <Form.Label>Password</Form.Label>
-  //             <Form.Control
-  //               type="password"
-  //               placeholder="Password"
-  //               name="password"
-  //               value={values.password}
-  //               onChange={handleChange}
-  //               isInvalid={!!errors.password}
-  //             />
-
-  //             <Form.Control.Feedback type="invalid" tooltip>
-  //               {errors.password}
-  //             </Form.Control.Feedback>
-  //           </Form.Group>
-  //           <Form.Group
-  //             as={Col}
-  //             md="3"
-  //             controlId="validationFormik104"
-  //             className="position-relative"
-  //           >
-  //             <Form.Label>Favorite Track</Form.Label>
-  //             <Form.Control
-  //               type="text"
-  //               placeholder="enter URL"
-  //               name="favoriteTrack"
-  //               value={values.favoriteTrack}
-  //               onChange={handleChange}
-  //               isInvalid={!!errors.favoriteTrack}
-  //             />
-  //             <Form.Control.Feedback type="invalid" tooltip>
-  //               {errors.favoriteTrack}
-  //             </Form.Control.Feedback>
-  //           </Form.Group>
-  //           <Form.Group
-  //             as={Col}
-  //             md="3"
-  //             controlId="validationFormik105"
-  //             className="position-relative"
-  //           >
-  //           </Form.Group>
-  //         </Row>
-  //         <Form.Group className="position-relative mb-3">
-  //           <Form.Label>Profile Picture</Form.Label>
-  //           <Form.Control
-  //             type="file"
-  //             required
-  //             name="profilePicture"
-  //             onChange={handleChange}
-  //             isInvalid={!!errors.profilePicture}
-  //           />
-  //           <Form.Control.Feedback type="invalid" tooltip>
-  //             {errors.profilePicture}
-  //           </Form.Control.Feedback>
-  //         </Form.Group>
-
-  //         <Button type="submit">Submit form</Button>
-  //       </Form>
-  //     )}
-  //   </Formik>
-  // </div>
-  // );
 }
 
 export default SignIn;
