@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import blendIcon from '../blendIcon.svg';
+import { userApi } from '../services/api/userApi';
+import { authApi, useLogoutUserMutation } from '../services/api/authApi';
 
 function NavBar() {
   const [OpenDropDown, setOpenDropDown] = useState(false);
@@ -7,6 +9,17 @@ function NavBar() {
   const handleToggle = () => {
     setOpenDropDown((current) => !current);
   }
+    
+  const { data } = userApi.endpoints.getMe.useQuery(null, {
+    skip: false
+  });
+
+  const [logoutUser, { isLoading, isSuccess, error, isError }] =
+    useLogoutUserMutation();  
+
+    const onLogoutHandler = async () => {
+      logoutUser();
+    };
     
   return (
     <div>
@@ -26,22 +39,25 @@ function NavBar() {
       <div className="flex items-center">
             <div>
               <button type="button" className="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" onClick={handleToggle}>
-                <img className="w-8 h-8 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="user photo"/>
+                <img className="w-8 h-8 rounded-full" src={data?.image} alt="user photo"/>
               </button>
             </div>
 { OpenDropDown && (
             <div className="z-50 mt-40 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600" id="dropdown-user">
               <div className="px-4 py-3" role="none">
                 <p className="text-sm text-gray-900 dark:text-white" role="none">
-                  Neil Sims
+                  {data?.name}
                 </p>
                 <p className="text-sm font-medium text-gray-900 truncate dark:text-gray-300" role="none">
-                  neil.sims@flowbite.com
+                  {data?.email}
                 </p>
+                {/* <p className="text-sm text-gray-900 dark:text-white" role="none">
+                  My Bio: {data?.bio}
+                </p> */}
               </div>
               <ul className="py-1" role="none">
                 <li>
-                  <a href="/sign-in" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Sign out</a>
+                  <a href="/sign-in" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem" onClick={onLogoutHandler}>Sign out</a>
                 </li>
               </ul>
             </div>

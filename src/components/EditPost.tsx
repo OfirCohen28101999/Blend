@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import blendIcon from '../blendIcon.svg';
 import { PostProps } from '../shared/types';
 
 function EditPost(postInfo: PostProps) {
@@ -10,7 +9,7 @@ function EditPost(postInfo: PostProps) {
   
   return (
     <div className="z-50 max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 z-50">    
-<div className="flex items-center justify-center w-full">
+{/* <div className="flex items-center justify-center w-full">
     {(postInfo.image == null) && (
     <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-20 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
         <div className="flex flex-col items-center justify-center">
@@ -25,26 +24,19 @@ function EditPost(postInfo: PostProps) {
     )}
         {(postInfo.image != null) && (
                <img className="rounded-t-lg h-20" src={blendIcon} alt="" />
-
    )}
-</div> 
+
+</div>  */}
 
 <div className="p-2 space-y-3">        
+        <textarea id="track" className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write your text here...">{postInfo.track?.name}</textarea>
         <textarea id="title" className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write your title here...">{postInfo.title}</textarea>
         <textarea id="message" className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write your text here...">{postInfo.description}</textarea>
-        <>
-        {(postInfo.title == "" && postInfo.description == "" && postInfo.image == null) && (
-        <button type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-1/7 h-10 sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Post</button>
-        )}
-        </>
-        <>
-        {(postInfo.title != "" || postInfo.description != "" || postInfo.image != null) && (
+
             <div>
         <button type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-1/7 h-10 sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={() => setOpenModal(false)}>Update</button>
         <button type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-1/7 h-10 sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={() => setOpenModal(false)}>Cancle</button>
         </div>
-        )}
-        </>
 </div>
   </div>
   );
