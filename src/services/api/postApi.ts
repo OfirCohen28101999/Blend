@@ -44,21 +44,21 @@ export const postApi = createApi({
         };
       },
     }),
-    // deletePost: builder.mutation<firstpost, string>({
-    //   query(id) {
-    //     return {
-    //       url: `/post/${id}`,
-    //       method: 'Delete',
-    //       credentials: 'include',
-    //     };
-    //   },
-    // }),
+    deletePost: builder.mutation<firstpost, string>({
+      query(id) {
+        return {
+          url: `/post/${id}`,
+          method: 'Delete',
+          credentials: 'include',
+        };
+      },
+    }),
   }),
 });
 
 export const {
   // useCreatePostMutation,
-  // useDeletePostMutation,
+  useDeletePostMutation,
   // useUpdatePostMutation,
   useGetAllPostsQuery,
 } = postApi;

@@ -4,6 +4,7 @@ import EditPost from './EditPost';
 import { PostProps, CommentProps } from '../shared/types';
 import { commentApi, useCreateCommentMutation } from '../services/api/commentApi';
 import { userApi } from '../services/api/userApi';
+import { useDeletePostMutation } from '../services/api/postApi';
 
 
 export function Post(postInfo: PostProps) {
@@ -30,6 +31,10 @@ export function Post(postInfo: PostProps) {
     setInputText(e.target.value);
   };
 
+  
+  const [deletePost] =
+  useDeletePostMutation();
+
   const [createComment] =
   useCreateCommentMutation();
   
@@ -38,9 +43,8 @@ export function Post(postInfo: PostProps) {
     // handleEditToggle();
   }
 
-  function deletePost() {
-    //TODO: delete post from DB
-    return null;
+  function deletePostFunction() {
+    deletePost(postInfo._id);
   };
 
   function commentPost(): void {
@@ -59,7 +63,7 @@ export function Post(postInfo: PostProps) {
               <div className="flex space-x-4">
                 {/* onClick={editPost} (in the edit line)*/} 
                 <button className="inline-flex items-center px-2 py-1 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={() => setOpenModalsecond(true)}>edit</button> 
-                <button className="inline-flex items-center px-2 py-1 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={deletePost}>delete</button>
+                <button className="inline-flex items-center px-2 py-1 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={deletePostFunction}>delete</button>
               </div>
             )}
           </>
