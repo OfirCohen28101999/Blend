@@ -5,6 +5,7 @@ import { userApi } from './api/userApi';
 import userReducer from './features/userSlice';
 import { postApi } from './api/postApi';
 import { commentApi } from './api/commentApi';
+import { trackApi } from './api/trackApi';
 
 export const store = configureStore({
   reducer: {
@@ -12,11 +13,12 @@ export const store = configureStore({
     [userApi.reducerPath]: userApi.reducer,
     [postApi.reducerPath]: postApi.reducer,
     [commentApi.reducerPath]: commentApi.reducer,
+    [trackApi.reducerPath]: trackApi.reducer,
     userState: userReducer,
   },
   devTools: process.env.NODE_ENV === 'development',
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({}).concat([authApi.middleware, userApi.middleware, postApi.middleware, commentApi.middleware]),
+    getDefaultMiddleware({}).concat([authApi.middleware, userApi.middleware, postApi.middleware, commentApi.middleware, trackApi.middleware]),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

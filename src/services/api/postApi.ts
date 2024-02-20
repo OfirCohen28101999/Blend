@@ -1,21 +1,21 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import customFetchBase from './customFetchBase';
-import { firstpost } from '../../shared/types';
+import { CreatePostProps, PostProps, firstpost } from '../../shared/types';
 
 export const postApi = createApi({
   reducerPath: 'postApi',
   baseQuery: customFetchBase,
   endpoints: (builder) => ({
-    // createPost: builder.mutation<firstpost, FormData>({
-    //   query(post) {
-    //     return {
-    //       url: '/',
-    //       method: 'POST',
-    //       credentials: 'include',
-    //       body: post,
-    //     };
-    //   },
-    // }),
+    createPost: builder.mutation<PostProps, CreatePostProps>({
+      query(post) {
+        return {
+          url: '/post',
+          method: 'POST',
+          credentials: 'include',
+          body: post,
+        };
+      },
+    }),
     // updatePost: builder.mutation<firstpost, { id: string; post: FormData }>(
     //   {
     //     query({ id, post }) {
@@ -57,7 +57,7 @@ export const postApi = createApi({
 });
 
 export const {
-  // useCreatePostMutation,
+  useCreatePostMutation,
   useDeletePostMutation,
   // useUpdatePostMutation,
   useGetAllPostsQuery,

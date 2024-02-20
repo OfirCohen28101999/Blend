@@ -1,14 +1,21 @@
 export interface PostProps {
-    _id: string,
-    title: string,
-    description: string,
-    image?: string
-    creatingUser: UserProps,
-    track: TrackProps,
-    createdAt?: Date,
-    updatedAt?: Date
-  }
-  
+  _id: string,
+  title: string,
+  description: string,
+  image?: string
+  creatingUser: UserProps,
+  track: TrackProps,
+  createdAt?: Date,
+  updatedAt?: Date
+}
+
+export interface CreatePostProps {
+  title: string,
+  description: string,
+  trackId: string, 
+  image: string
+}
+
   export interface TrackProps {
     _id: string,
     spotifyId: string,
@@ -19,6 +26,13 @@ export interface PostProps {
     previewUrl: string,
     createdAt: Date,
     updatedAt: Date
+  }
+
+  export interface secondtrack {
+    tracks:TrackProps[]
+  }
+  export interface firsttrack {
+    data:secondtrack
   }
 
   export interface CommentProps {

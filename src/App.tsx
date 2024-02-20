@@ -8,6 +8,7 @@ import ProtectedRoute from './routing/ProtectedRoute';
 import { RoutesEnum } from './routing/routes.enum';
 import { initFlowbite } from 'flowbite';
 import SignUp from './pages/signUp';
+import Songs from './pages/songs';
 
 function App() {
   useEffect(() => {
@@ -19,6 +20,7 @@ function App() {
           <Route index path={RoutesEnum.HOME} Component={Feed} />
           <Route path={RoutesEnum.MYPAGE} Component={MyAccount} />
           <Route path={RoutesEnum.FEED} Component={Feed} />
+          <Route path={RoutesEnum.SONGS} Component={Songs} />
         </Route>
         <Route path={RoutesEnum.SIGNIN} Component={SignIn} />
         <Route path={RoutesEnum.SIGNUP} Component={SignUp} />

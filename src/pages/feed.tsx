@@ -4,7 +4,7 @@ import { userApi } from "../services/api/userApi";
 import { PostProps, UserProps } from "../shared/types";
 
 export function Feed() {
-
+  
     const allPosts: PostProps[] | undefined = postApi.endpoints.getAllPosts.useQuery(undefined, {
       skip: false,
     }).data?.data.posts;
