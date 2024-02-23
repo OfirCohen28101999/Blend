@@ -16,26 +16,18 @@ export const postApi = createApi({
         };
       },
     }),
-    // updatePost: builder.mutation<firstpost, { id: string; post: FormData }>(
-    //   {
-    //     query({ id, post }) {
-    //       return {
-    //         url: `/post/${id}`,
-    //         method: 'PATCH',
-    //         credentials: 'include',
-    //         body: post,
-    //       };
-    //     },
-    //   }
-    // ),
-    // getPost: builder.query<firstpost, string>({
-    //   query(id) {
-    //     return {
-    //       url: `/post/${id}`,
-    //       credentials: 'include',
-    //     };
-    //   },
-    // }),
+    updatePost: builder.mutation<firstpost, CreatePostProps>(
+      {
+        query(post) {
+          return {
+            url: `/post/${post.postId}`,
+            method: 'PATCH',
+            credentials: 'include',
+            body: post,
+          };
+        },
+      }
+    ),
     getAllPosts: builder.query<firstpost, void>({ //PostProps[]
       query() {
         return {
@@ -45,9 +37,9 @@ export const postApi = createApi({
       },
     }),
     deletePost: builder.mutation<firstpost, string>({
-      query(id) {
+      query(postId) {
         return {
-          url: `/post/${id}`,
+          url: `/post/${postId}`,
           method: 'Delete',
           credentials: 'include',
         };
@@ -59,6 +51,6 @@ export const postApi = createApi({
 export const {
   useCreatePostMutation,
   useDeletePostMutation,
-  // useUpdatePostMutation,
+  useUpdatePostMutation,
   useGetAllPostsQuery,
 } = postApi;

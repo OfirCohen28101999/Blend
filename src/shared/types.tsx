@@ -14,6 +14,7 @@ export interface CreatePostProps {
   description: string,
   trackId: string, 
   image: string
+  postId?: string
 }
 
   export interface TrackProps {
@@ -72,6 +73,12 @@ export interface CreatePostProps {
     createdAt?: Date;
     updatedAt?: Date;
     __v?: number;
+}
+
+export interface UpdateUserProps {
+  email: string,
+  password: string,
+  image?: string
 }
 
 export interface SessionProps {
