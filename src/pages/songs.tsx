@@ -7,39 +7,37 @@ import { useCreatePostMutation } from "../services/api/postApi";
 
 export function Songs() {
 
-    const allTracks = trackApi.endpoints.getAllTracks.useQuery(undefined, { 
-        skip: false
-    }).data?.data?.tracks;
+  const allTracks = trackApi.endpoints.getAllTracks.useQuery(undefined, { 
+      skip: false
+  }).data?.data?.tracks;
 
-    const [currTrackId, setTrackId] = useState("");
-    const [inputTitle, setInputTitle] = useState("");
-    const [inputText, setInputText] = useState("");
+  const [currTrackId, setTrackId] = useState("");
+  const [inputTitle, setInputTitle] = useState("");
+  const [inputText, setInputText] = useState("");
+  const [openModal, setOpenModal] = useState(false);
+  const [createPost] = useCreatePostMutation();
 
-    const handleChangeText = (e: ChangeEvent<HTMLTextAreaElement>) => {
-        setInputText(e.target.value);
-    };
 
-    const handleChangeTitle = (e: ChangeEvent<HTMLTextAreaElement>) => {
-        setInputTitle(e.target.value);
-    };
+  const handleChangeText = (e: ChangeEvent<HTMLTextAreaElement>) => {
+      setInputText(e.target.value);
+  };
 
-    const [openModal, setOpenModal] = useState(false);
+  const handleChangeTitle = (e: ChangeEvent<HTMLTextAreaElement>) => {
+      setInputTitle(e.target.value);
+  };
 
-    const [createPost] =
-    useCreatePostMutation();
-
-    function createPostFunction(): void {
+  function createPostFunction(): void {
     createPost({title: inputTitle, description: inputText, trackId: currTrackId, image:" "});
-    }
-      
+  }
+    
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 gap-4 ml-40 pl-5 pt-16">
       {allTracks?.map((track: TrackProps) => (
         <div className="bg-white border border-gray-200 rounded-lg shadow">
- <iframe src={`https://open.spotify.com/embed/track/${track?.spotifyId}?utm_source=generator`} width="100%" height="152" frameBorder="0" allowFullScreen={true} allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"/>
+          <iframe src={`https://open.spotify.com/embed/track/${track?.spotifyId}?utm_source=generator`} width="100%" height="152" frameBorder="0" allowFullScreen={true} allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"/>
           <h5 className="flex justify-center text-1xl font-bold tracking-tight text-gray-900 dark:text-white cursor-pointer" onClick={() => {setTrackId( track.spotifyId); setOpenModal(true);}}>+</h5>
-          </div>
-    ))}
+        </div>
+      ))}
       <>
       <Modal show={openModal} onClose={() => setOpenModal(false)}>
         <Modal.Header className="p-1 ml-3">Create Post</Modal.Header>
@@ -51,7 +49,7 @@ export function Songs() {
             <button onClick={() => { createPostFunction(); setOpenModal(false);}} type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-1/7 h-10 sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Post</button>       
         </Modal.Footer>
       </Modal>
-    </>
+      </>
     </div>
   );
 }

@@ -25,7 +25,6 @@ export function Feed() {
       ))}
     </div>
   );
-  // .filter((postInfo:PostProps) => !postInfo.user)
 }
 
 export default Feed;
