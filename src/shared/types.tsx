@@ -76,9 +76,8 @@ export interface CreatePostProps {
 }
 
 export interface UpdateUserProps {
-  email: string,
-  password: string,
-  image?: string
+  bio: string,
+  image?: File
 }
 
 export interface SessionProps {

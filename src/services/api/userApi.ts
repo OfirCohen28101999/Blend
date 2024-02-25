@@ -1,7 +1,7 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { setUser } from '../features/userSlice';
 import customFetchBase from './customFetchBase';
-import { UserProps } from '../../shared/types';
+import { UpdateUserProps, UserProps } from '../../shared/types';
 
 export const userApi = createApi({
   reducerPath: 'userApi',
@@ -24,5 +24,21 @@ export const userApi = createApi({
         } catch (error) {}
       },
     }),
+    updateMe: builder.mutation<UserProps, FormData>({
+      query(userInfo) {
+        return {
+          url: 'users/me',
+          method: 'PATCH',
+          credentials: 'include',
+          body: userInfo
+        };
+      },
+    }),
   }),
 });
+
+export const {
+  useGetMeQuery,
+  useUpdateMeMutation
+} = userApi;
+

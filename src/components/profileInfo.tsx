@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { userApi } from "../services/api/userApi";
+import { ChangeEvent, useState } from "react";
+import { useUpdateMeMutation, userApi } from "../services/api/userApi";
 
 function ProfileInfo() {
   const [disableEdit, setDisableEdit] = useState(true);
@@ -8,25 +8,37 @@ function ProfileInfo() {
     setDisableEdit((current) => !current);
   };
 
-  const { data } = userApi.endpoints.getMe.useQuery(null, {
+  const currUserInfo = userApi.endpoints.getMe.useQuery(null, {
     skip: false
-  });
+  }).data;
   
+  const [inputBio, setInputBio] = useState(currUserInfo?.bio ? currUserInfo?.bio : " ");
+
+  const handleBioChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setInputBio(e.target.value);
+  };
+
+  const [updateUserInfo,  { isLoading, isError, error, isSuccess }] = useUpdateMeMutation();
+
+  const [image, setImage] = useState<File>();
+
+const updateUser = (e: any) => {
+  e.preventDefault();
+  const formData = new FormData();
+  if(image){
+    formData.append('image', image);
+  }
+  formData.append('bio', inputBio);
+  updateUserInfo(formData);
+}
+const onInputChange = (e: any) => {
+  setImage(e.target.files[0]);
+}
+
   return (
+
     <div>
-      todo: add my profile picture, edit snd delete
-      <div className="flex items-center justify-center w-48">
-    <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-20 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
-        <div className="flex flex-col items-center justify-center">
-            <svg className="w-8 h-6 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
-            </svg>
-            <p className="mb-1 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">Click to upload</span> or drag and drop</p>
-            <p className="mb-1 text-xs text-gray-500 dark:text-gray-400">SVG, PNG or JPG (MAX. 800x400px)</p>
-        </div>
-        <input id="dropzone-file" type="file" className="hidden" />
-    </label>
-    </div>
+      {/* todo: add my profile picture, edit snd delete */}
 <>
 {disableEdit && (
   <div className="flex items-center">
@@ -34,11 +46,15 @@ function ProfileInfo() {
 <form className='w-90 flex flex-row px-5 space-x-6'>
     <div className="mb-6">
         <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email address</label>
-        <input type="email" id="email" className="cursor-not-allowed bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-3/7 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder={data?.email} disabled/>
+        <input type="email" id="email" className="cursor-not-allowed bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-3/7 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder={currUserInfo?.email} disabled/>
     </div> 
     <div className="mb-6">
         <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
         <input type="password" id="password" className="cursor-not-allowed bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-3/7 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="•••••••••" disabled/>
+    </div> 
+    <div className="mb-6">
+        <label htmlFor="bio" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Bio</label>
+        <input type="bio" id="bio" className="cursor-not-allowed bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-3/7 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder={currUserInfo?.bio} disabled/>
     </div> 
 </form>
 </div>
@@ -48,16 +64,16 @@ function ProfileInfo() {
 {!disableEdit && (
   <div className="flex items-center">
   <button type="button" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-1/7 h-10 sm:w-auto px-2 py-1 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={handleToggle}>Back</button>
+  <form onSubmit={updateUser}>
+    <input type="file" accept="image/" onChange={onInputChange}/>
+    <button type="submit">Submit</button>
+  </form>
 <form className='w-90 flex flex-row px-5 space-x-6 items-center'>
     <div className="mb-6">
-        <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email address</label>
-        <input type="email" id="email" className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-3/7 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder={data?.email}/>
+        <label htmlFor="bio" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Bio</label>
+        <input type="bio" id="bio" className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-3/7 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" onChange={handleBioChange} value={inputBio} required/>
     </div> 
-    <div className="mb-6">
-        <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
-        <input type="password" id="password" className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-3/7 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="•••••••••" />
-    </div> 
-    <button type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-1/7 h-10 sm:w-auto px-2 py-1 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
+    {/* <button type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-1/7 h-10 sm:w-auto px-2 py-1 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={methods.handleSubmit(onSubmitHandler)}>Submit</button> */}
 </form>
 </div>
 )}
@@ -68,8 +84,3 @@ function ProfileInfo() {
 
 export default ProfileInfo;
 
-{/* 
-<div>
-            <label htmlhtmlFor="website" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Website URL</label>
-            <input type="url" id="website" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="flowbite.com" required>
-        </div> */}
