@@ -34,11 +34,21 @@ export const userApi = createApi({
         };
       },
     }),
+    deleteUserImage: builder.mutation<any, string>({
+      query(imageName) {
+        return {
+          url: `users/image/delete/${imageName}`,
+          method: 'delete',
+          credentials: 'include',
+        };
+      },
+    })
   }),
 });
 
 export const {
   useGetMeQuery,
-  useUpdateMeMutation
+  useUpdateMeMutation,
+  useDeleteUserImageMutation
 } = userApi;
 

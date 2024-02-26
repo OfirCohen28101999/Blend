@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import blendIcon from '../blendIcon.svg';
+import blendIcon from '../assets/blendIcon.svg';
 import { userApi } from '../services/api/userApi';
 import { useLogoutUserMutation } from '../services/api/authApi';
 
@@ -13,6 +13,7 @@ function NavBar() {
   const { data } = userApi.endpoints.getMe.useQuery(null, {
     skip: false
   });
+  const imgSrc= data?.image ? `${process.env.REACT_APP_SERVER_ENDPOINT}/static/users/${data?.image}` : blendIcon;
 
   const [logoutUser, { isLoading, isSuccess, error, isError }] =
     useLogoutUserMutation();  
@@ -39,7 +40,7 @@ function NavBar() {
       <div className="flex items-center">
             <div>
               <button type="button" className="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" onClick={handleToggle}>
-                <img className="w-8 h-8 rounded-full" src={data?.image} alt="user photo"/>
+                <img className="w-8 h-8 rounded-full" src={imgSrc} alt="user photo"/>
               </button>
             </div>
 { OpenDropDown && (
@@ -51,9 +52,9 @@ function NavBar() {
                 <p className="text-sm font-medium text-gray-900 truncate dark:text-gray-300" role="none">
                   {data?.email}
                 </p>
-                {/* <p className="text-sm text-gray-900 dark:text-white" role="none">
+                <p className="text-sm text-gray-900 dark:text-white" role="none">
                   My Bio: {data?.bio}
-                </p> */}
+                </p>
               </div>
               <ul className="py-1" role="none">
                 <li>
