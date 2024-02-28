@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import blendIcon from '../assets/blendIcon.svg';
-import { userApi } from '../services/api/userApi';
 import { useLogoutUserMutation } from '../services/api/authApi';
+import { getCurrentUserQuery } from '../shared/general';
 
 function NavBar() {
   const [OpenDropDown, setOpenDropDown] = useState(false);
@@ -9,13 +9,12 @@ function NavBar() {
   const handleToggle = () => {
     setOpenDropDown((current) => !current);
   }
-    
-  const { data } = userApi.endpoints.getMe.useQuery(null, {
-    skip: false
-  });
-  const imgSrc= data?.image ? `${process.env.REACT_APP_SERVER_ENDPOINT}/static/users/${data?.image}` : blendIcon;
+  
+  const currentUser = getCurrentUserQuery();
+  
+  const imgSrc= currentUser?.image ? `${process.env.REACT_APP_SERVER_ENDPOINT}/static/users/${currentUser?.image}` : blendIcon;
 
-  const [logoutUser, { isLoading, isSuccess, error, isError }] =
+  const [logoutUser] =
     useLogoutUserMutation();  
 
     const onLogoutHandler = async () => {
@@ -47,13 +46,13 @@ function NavBar() {
             <div className="z-50 mt-40 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600" id="dropdown-user">
               <div className="px-4 py-3" role="none">
                 <p className="text-sm text-gray-900 dark:text-white" role="none">
-                  {data?.name}
+                  {currentUser?.name}
                 </p>
                 <p className="text-sm font-medium text-gray-900 truncate dark:text-gray-300" role="none">
-                  {data?.email}
+                  {currentUser?.email}
                 </p>
                 <p className="text-sm text-gray-900 dark:text-white" role="none">
-                  My Bio: {data?.bio}
+                  My Bio: {currentUser?.bio}
                 </p>
               </div>
               <ul className="py-1" role="none">

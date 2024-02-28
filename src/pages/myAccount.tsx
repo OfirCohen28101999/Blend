@@ -1,23 +1,13 @@
 import ProfileInfo from "../components/profileInfo";
 import Post from "../components/post";
-import { postApi } from "../services/api/postApi";
 import { PostProps } from "../shared/types";
-import { userApi } from "../services/api/userApi";
+import { getAllPostsQuery, getCurrentUserQuery, getCurrentUserPosts } from "../shared/general";
 
 function MyAccount() {
 
-  const allPosts: PostProps[] | undefined = postApi.endpoints.getAllPosts.useQuery(undefined, {
-    skip: false,
-  }).data?.data.posts;
-
-  // : UserProps
-  const currentUser = userApi.endpoints.getMe.useQuery(null, { 
-    skip: false
-  }).data;
-
-  const currUserPosts: PostProps[] | undefined = allPosts?.filter((postInfo: PostProps) => 
-    postInfo.creatingUser._id == currentUser?._id
-  );
+  const allPosts: PostProps[] | undefined = getAllPostsQuery();
+  const currentUser = getCurrentUserQuery();
+  const currUserPosts: PostProps[] | undefined = getCurrentUserPosts(allPosts, currentUser);
 
   return (
     <div className="ml-40 pl-5 pt-16">

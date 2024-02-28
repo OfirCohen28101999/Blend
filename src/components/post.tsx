@@ -2,15 +2,12 @@ import { ChangeEvent, useState } from 'react';
 import { Modal } from 'flowbite-react';
 import { PostProps, CommentProps } from '../shared/types';
 import { commentApi, useCreateCommentMutation } from '../services/api/commentApi';
-import { userApi } from '../services/api/userApi';
 import { useDeletePostMutation, useUpdatePostMutation } from '../services/api/postApi';
+import { getCurrentUserQuery } from '../shared/general';
 
 export function Post(postInfo: PostProps) {
 
-  // : UserProps
-  const currentUser = userApi.endpoints.getMe.useQuery(null, { 
-    skip: false
-  }).data;
+  const currentUser = getCurrentUserQuery();
 
   const isCurrUserPost: boolean = postInfo.creatingUser._id == currentUser?._id;
   
@@ -57,7 +54,7 @@ export function Post(postInfo: PostProps) {
   function commentPost(): void {
     createComment({description: inputComment, postId: postInfo._id, title: " "});
   }
- 
+
   return (
     <div className="h-80 w-64">
       <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
