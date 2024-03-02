@@ -16,5 +16,6 @@ export const getGoogleUrl = (from: string) => {
 
   const qs = new URLSearchParams(options);
 
+  localStorage.setItem('googleToken', 'googleToken'); // Add to local storage for sign in
   return `${rootUrl}?${qs.toString()}`;
 };

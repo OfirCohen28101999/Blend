@@ -19,6 +19,8 @@ function NavBar() {
 
     const onLogoutHandler = async () => {
       logoutUser();
+      localStorage.removeItem('token');
+      localStorage.removeItem('googleToken');
     };
     
   return (

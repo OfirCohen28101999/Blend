@@ -9,9 +9,14 @@ const ProtectedRoute = () => {
   const location = useLocation();
 
   useEffect(() => {
+
+   const googleToken = localStorage.getItem('googleToken')
+    const token = localStorage.getItem('token')
   //   // const auth = getAuth();
   //   // const unsubscribe = onAuthStateChanged(auth, (user) => {
+    if(token || googleToken){
       setIsLoggedIn(true);
+    }
       setCheckingStatus(false);
   //   });
 
@@ -24,7 +29,7 @@ const ProtectedRoute = () => {
 
   return isLoggedIn ? (
     <>
-      <NavBar />
+      <NavBar/>
         <Outlet/>
     </>
   ) : (

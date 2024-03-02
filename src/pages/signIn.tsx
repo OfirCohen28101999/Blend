@@ -7,25 +7,25 @@ import FormInput from '../components/FormInput';
 import { useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useLoginUserMutation } from '../services/api/authApi';
-import { ReactComponent as GoogleLogo } from '../google.svg';
+import { ReactComponent as GoogleLogo } from '../assets/google.svg';
 import { getGoogleUrl } from '../utils/getGoogleUrl';
 import { LoadingButton as _LoadingButton } from '@mui/lab';
+import blendIcon from '../assets/blendIcon.svg';
 
 const LoadingButton = styled(_LoadingButton)`
   padding: 0.6rem 0;
-  background-color: #f9d13e;
-  color: #2363eb;
   font-weight: 500;
 
   &:hover {
-    background-color: #ebc22c;
+    background-color: #0000CD;
     transform: translateY(-2px);
   }
 `;
 
 const LinkItem = styled(Link)`
   text-decoration: none;
-  color: #2363eb;
+  color: #FFFFFF;
+
   &:hover {
     text-decoration: underline;
   }
@@ -49,14 +49,13 @@ function SignIn() {
     resolver: zodResolver(loginSchema),
   });
 
-  // 👇 API Login Mutation
-  const [loginUser, { isLoading, isError, error, isSuccess }] =
+  const [loginUser, { isLoading, isSuccess }] =
     useLoginUserMutation();
 
   const navigate = useNavigate();
   const location = useLocation();
 
-  const from = ((location.state as any)?.from.pathname as string) || '/';
+  const from = ((location.state as any)?.from.pathname as string) || '/feed';
 
   const {
     reset,
@@ -64,22 +63,37 @@ function SignIn() {
     formState: { isSubmitSuccessful },
   } = methods;
 
+  const handleLogin = async (values: LoginInput) => {
+    try {
+      const response = await loginUser(values);
+      if ('data' in response) {
+
+        const token = response.data.access_token; 
+        localStorage.setItem('token', token);
+      }
+      else {
+        console.error('Login failed:', response.error);
+      }
+    } catch (error) {
+      console.error('Login failed:', error);
+    }
+  };
+
   useEffect(() => {
     if (isSuccess) {
       navigate(from);
     }
-  }, [isLoading]);
+  }, [isSuccess, from, navigate]);
 
   useEffect(() => {
     if (isSubmitSuccessful) {
       reset();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSubmitSuccessful]);
+  }, [isSubmitSuccessful, reset]);
 
   const onSubmitHandler: SubmitHandler<LoginInput> = (values) => {
-    // 👇 Executing the loginUser Mutation
-   loginUser(values);
+  //  loginUser(values);
+   handleLogin(values);
   };
 
   return (
@@ -89,8 +103,6 @@ function SignIn() {
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      height: '100vh',
-      backgroundColor: '#2363eb',
     }}
   >
     <Box
@@ -105,23 +117,15 @@ function SignIn() {
         textAlign='center'
         component='h1'
         sx={{
-          color: '#f9d13e',
           fontWeight: 600,
           fontSize: { xs: '2rem', md: '3rem' },
           mb: 2,
           letterSpacing: 1,
         }}
       >
-        Welcome Back!
-      </Typography>
-      <Typography
-        variant='body1'
-        component='h2'
-        sx={{ color: '#e5e7eb', mb: 2 }}
-      >
-        Login to have access!
-      </Typography>
+  <img src={blendIcon} className="h-8 me-3 rounded-full" />
 
+Blend       </Typography>
       <FormProvider {...methods}>
         <Box
           component='form'
@@ -129,20 +133,12 @@ function SignIn() {
           noValidate
           autoComplete='off'
           maxWidth='27rem'
-          width='100%'
-          sx={{
-            backgroundColor: '#e5e7eb',
-            p: { xs: '1rem', sm: '2rem' },
-            borderRadius: 2,
-          }}
+          width='100%' sx={{ backgroundColor: '#e5e7eb', p: { xs: '1rem', sm: '2rem' }, borderRadius: 2}}
         >
           <FormInput name='email' label='Email Address' type='email' />
           <FormInput name='password' label='Password' type='password' />
 
-          <Typography
-            sx={{ fontSize: '0.9rem', mb: '1rem', textAlign: 'right' }}
-          >
-          </Typography>
+          <Typography sx={{ fontSize: '0.9rem', mb: '1rem', textAlign: 'right' }}></Typography>
 
           <LoadingButton
             variant='contained'
@@ -152,28 +148,22 @@ function SignIn() {
             type='submit'
             loading={isLoading}
           >
-            <LinkItem to='/feed' style={{ color: '#333' }}>
+            {/* <LinkItem to='/feed' style={{ color: '#333' }}> */}
+            {/* <a href="/feed" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white">Login</a> */}
             Login
-            </LinkItem>
+
+            {/* </LinkItem> */}
 
           </LoadingButton>
 
           <Typography sx={{ fontSize: '0.9rem', mt: '1rem' }}>
-            Need an account? <LinkItem to='/sign-up'>Sign Up Here</LinkItem>
+          Don’t have an account yet? <LinkItem to='/sign-up'>Sign Up Here</LinkItem>
           </Typography>
         </Box>
       </FormProvider>
-      <Typography
-        variant='h6'
-        component='p'
-        sx={{
-          my: '1.5rem',
-          textAlign: 'center',
-          color: 'white',
-        }}
-      >
+      {/* <Typography variant='h6' component='p' sx={{my: '1.5rem', textAlign: 'center', color: 'black',}}>
         Log in with another provider:
-      </Typography>
+      </Typography> */}
       <Box
         maxWidth='27rem'
         width='100%'
