@@ -1,9 +1,8 @@
 import { ChangeEvent, useState } from "react";
 import { trackApi } from "../services/api/trackApi";
-import { TrackProps } from "../shared/types";
+import { PostProps, TrackProps, firstpost } from "../shared/types";
 import { Modal } from 'flowbite-react';
-import { useCreatePostMutation } from "../services/api/postApi";
-
+import { useCreatePostMutation, useUpdatePostMutation } from "../services/api/postApi";
 
 export function Songs() {
 
@@ -13,23 +12,45 @@ export function Songs() {
 
   const [currTrackId, setTrackId] = useState("");
   const [inputTitle, setInputTitle] = useState("");
-  const [inputText, setInputText] = useState("");
+  const [inputDescription, setInputDescription] = useState("");
   const [openModal, setOpenModal] = useState(false);
   const [createPost] = useCreatePostMutation();
 
 
   const handleChangeText = (e: ChangeEvent<HTMLTextAreaElement>) => {
-      setInputText(e.target.value);
+    setInputDescription(e.target.value);
   };
 
   const handleChangeTitle = (e: ChangeEvent<HTMLTextAreaElement>) => {
       setInputTitle(e.target.value);
   };
-
-  function createPostFunction(): void {
-    createPost({title: inputTitle, description: inputText, trackId: currTrackId, image:" "});
-  }
     
+  const [updatePost] = useUpdatePostMutation();
+
+  const createPostFunction = async (e: any) => {
+    e.preventDefault();
+    const result = await createPost({title: inputTitle, description: inputDescription, trackId: currTrackId, image:" "});
+  
+    if ('data' in result) {
+      const newPost: PostProps = result.data.data.post;
+      const formData = new FormData();
+      if(image){
+        formData.append('image', image);
+      }
+      formData.append('title', inputTitle);
+      formData.append('description', inputDescription);
+      updatePost({postId: newPost._id, form: formData});
+      setOpenModal(false);
+    } else {
+      console.error('Error creating post:', result.error);
+    }
+  } 
+const [image, setImage] = useState<File>();
+
+const onInputChange = (e: any) => {
+  setImage(e.target.files[0]);
+}
+
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 gap-4 ml-40 pl-5 pt-16">
       {allTracks?.map((track: TrackProps) => (
@@ -41,13 +62,16 @@ export function Songs() {
       <>
       <Modal show={openModal} onClose={() => setOpenModal(false)}>
         <Modal.Header className="p-1 ml-3">Create Post</Modal.Header>
+        <form onSubmit={createPostFunction} className='w-90 flex flex-row px-5 space-x-6 items-center'>
         <Modal.Body>
+    <input type="file" accept="image/" onChange={onInputChange}/>
             <textarea id="title" className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write your title here..."  onChange={handleChangeTitle} value={inputTitle} required></textarea>
-            <textarea id="text" className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write your text here..."  onChange={handleChangeText} value={inputText} required></textarea>
+            <textarea id="text" className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write your text here..."  onChange={handleChangeText} value={inputDescription} required></textarea>
         </Modal.Body>
         <Modal.Footer>
-            <button onClick={() => { createPostFunction(); setOpenModal(false);}} type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-1/7 h-10 sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Post</button>       
+          <button type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-1/7 h-10 sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Post</button>       
         </Modal.Footer>
+        </form>
       </Modal>
       </>
     </div>

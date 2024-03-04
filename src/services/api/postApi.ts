@@ -1,12 +1,12 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import customFetchBase from './customFetchBase';
-import { CreatePostProps, PostProps, firstpost } from '../../shared/types';
+import { CreatePostProps, PostProps, firstpost, firstpostcreate } from '../../shared/types';
 
 export const postApi = createApi({
   reducerPath: 'postApi',
   baseQuery: customFetchBase,
   endpoints: (builder) => ({
-    createPost: builder.mutation<PostProps, CreatePostProps>({
+    createPost: builder.mutation<firstpostcreate, CreatePostProps>({
       query(post) {
         return {
           url: '/post',
@@ -16,14 +16,14 @@ export const postApi = createApi({
         };
       },
     }),
-    updatePost: builder.mutation<firstpost, CreatePostProps>(
+    updatePost: builder.mutation<firstpost, {postId: string, form: FormData}>(
       {
         query(post) {
           return {
             url: `/post/${post.postId}`,
             method: 'PATCH',
             credentials: 'include',
-            body: post,
+            body: post.form,
           };
         },
       }
@@ -45,6 +45,15 @@ export const postApi = createApi({
         };
       },
     }),
+    deletePostImage: builder.mutation<any, string>({
+      query(postId) {
+        return {
+          url: `/post/image/delete/${postId}`,
+          method: 'Delete',
+          credentials: 'include',
+        };
+      },
+    }),
   }),
 });
 
@@ -53,4 +62,5 @@ export const {
   useDeletePostMutation,
   useUpdatePostMutation,
   useGetAllPostsQuery,
+  useDeletePostImageMutation
 } = postApi;

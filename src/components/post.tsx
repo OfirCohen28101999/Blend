@@ -2,7 +2,8 @@ import { ChangeEvent, useState } from 'react';
 import { Modal } from 'flowbite-react';
 import { PostProps, CommentProps } from '../shared/types';
 import { commentApi, useCreateCommentMutation } from '../services/api/commentApi';
-import { useDeletePostMutation, useUpdatePostMutation } from '../services/api/postApi';
+import { useDeletePostImageMutation, useDeletePostMutation, useUpdatePostMutation } from '../services/api/postApi';
+import blendIcon from '../assets/blendIcon.svg';
 import { getCurrentUserQuery } from '../shared/general';
 
 export function Post(postInfo: PostProps) {
@@ -41,19 +42,38 @@ export function Post(postInfo: PostProps) {
 
   const [deletePost] = useDeletePostMutation();
 
+  const [deletePostImage] = useDeletePostImageMutation();
+
   const [createComment] = useCreateCommentMutation();
   
-  function editPost(): void {
-    updatePost({title: inputTitle, description: inputDescription, trackId: postInfo.track._id, image:" ", postId: postInfo._id})
+  const [image, setImage] = useState<File>();
+
+  const editPost = (e: any) => {
+    e.preventDefault();
+    const formData = new FormData();
+    if(image){
+      formData.append('image', image);
+    }
+    formData.append('title', inputTitle);
+    formData.append('description', inputDescription);
+    updatePost({postId: postInfo._id, form: formData});
+    setOpenEditModal(false);
   }
+
+const onInputChange = (e: any) => {
+  setImage(e.target.files[0]);
+}
 
   function deletePostFunction() {
     deletePost(postInfo._id);
+    deletePostImage(postInfo.image ? postInfo.image : " ");
   };
 
   function commentPost(): void {
     createComment({description: inputComment, postId: postInfo._id, title: " "});
   }
+
+  const imgSrc= postInfo?.image ? `${process.env.REACT_APP_SERVER_ENDPOINT}/static/posts/${postInfo?.image}` : blendIcon;
 
   return (
     <div className="h-80 w-64">
@@ -64,10 +84,17 @@ export function Post(postInfo: PostProps) {
           <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">{postInfo.description}</p>
           <>
             {isCurrUserPost && (
+              <div>
+                              <div className="flex space-x-4 pb-2">
+                              <button className="inline-flex items-center px-2 py-1 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={() => setOpenCommentsModal(true)} >{postComments?.length} comments</button>
+                              <p className="mb-3 font-normal text-gray-700 dark:text-gray-400"> By: {postInfo.creatingUser.name}</p>
+                              <img className="w-8 h-8 rounded-full" src={imgSrc} alt="post photo"/>
+                            </div>
               <div className="flex space-x-4">
                 <button className="inline-flex items-center px-2 py-1 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={() => setOpenEditModal(true)}>edit</button> 
                 <button className="inline-flex items-center px-2 py-1 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={deletePostFunction}>delete</button>
               </div>
+                            </div>
             )}
           </>
           <>
@@ -76,6 +103,7 @@ export function Post(postInfo: PostProps) {
                 <div className="flex space-x-4 pb-2">
                   <button className="inline-flex items-center px-2 py-1 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={() => setOpenCommentsModal(true)} >{postComments?.length} comments</button>
                   <p className="mb-3 font-normal text-gray-700 dark:text-gray-400"> By: {postInfo.creatingUser.name}</p>
+                  <img className="w-8 h-8 rounded-full" src={imgSrc} alt="post photo"/>
                 </div>
                 <div className="flex">
                     <div className="relative w-full">
@@ -91,16 +119,19 @@ export function Post(postInfo: PostProps) {
       <>
         <Modal show={openEditModal} onClose={() => setOpenEditModal(false)}> 
           <Modal.Header className="p-1 ml-3">Update Post</Modal.Header>
+          <form onSubmit={editPost} className='w-90 flex flex-row px-5 space-x-6 items-center'>
           <Modal.Body>
+          <input type="file" accept="image/" onChange={onInputChange}/>
             <textarea id="title" className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write your title here..."  onChange={handleTitleChange} value={inputTitle}>{postInfo.title}</textarea>
             <textarea id="message" className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write your text here..."  onChange={handleDescriptionChange} value={inputDescription}>{postInfo.description}</textarea>
           </Modal.Body>
           <Modal.Footer>
             <div className="flex space-x-4">
-              <button type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-1/7 h-10 sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={() => {editPost(); setOpenEditModal(false)}}>Update</button>
-              <button type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-1/7 h-10 sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={() => setOpenEditModal(false)}>Cancle</button>
+              <button type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-1/7 h-10 sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Update</button>
+              <button type="button" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-1/7 h-10 sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={() => setOpenEditModal(false)}>Cancle</button>
             </div>
           </Modal.Footer>
+          </form>
         </Modal>
       </>
       <>

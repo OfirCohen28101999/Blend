@@ -5,25 +5,25 @@ import { object, string, TypeOf } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import FormInput from '../components/FormInput';
 import { useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useRegisterUserMutation } from '../services/api/authApi';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useLoginUserMutation, useRegisterUserMutation } from '../services/api/authApi';
 import { LoadingButton as _LoadingButton } from '@mui/lab';
+import blendIcon from '../assets/blendIcon.svg';
 
 const LoadingButton = styled(_LoadingButton)`
   padding: 0.6rem 0;
-  background-color: #f9d13e;
-  color: #2363eb;
   font-weight: 500;
 
   &:hover {
-    background-color: #ebc22c;
+    background-color: #0000CD;
     transform: translateY(-2px);
   }
 `;
 
 const LinkItem = styled(Link)`
   text-decoration: none;
-  color: #2363eb;
+  color: #FFFFFF;
+
   &:hover {
     text-decoration: underline;
   }
@@ -52,11 +52,16 @@ const SignUp = () => {
     resolver: zodResolver(registerSchema),
   });
 
-  // 👇 Calling the Register Mutation
-  const [registerUser, { isLoading, isSuccess, error, isError, data }] =
+  const [registerUser] =
     useRegisterUserMutation();
 
+    const [loginUser, { isLoading, isSuccess }] =
+    useLoginUserMutation();
+    
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const from = ((location.state as any)?.from.pathname as string) || '/feed';
 
   const {
     reset,
@@ -66,20 +71,36 @@ const SignUp = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      navigate('/verifyemail');
+      navigate(from);
     }
-  }, [isLoading]);
+  }, [isSuccess, from, navigate]);
 
   useEffect(() => {
     if (isSubmitSuccessful) {
       reset();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSubmitSuccessful]);
 
+  const handleRegister = async (values: RegisterInput) => {
+    try {
+      await registerUser(values);
+      const loginResponse = await loginUser({email: values.email, password: values.password});
+
+      if ('data' in loginResponse) {
+
+        const token = loginResponse.data.access_token; 
+        localStorage.setItem('token', token);
+      }
+      else {
+        console.error('Register failed:', loginResponse.error);
+      }
+    } catch (error) {
+      console.error('Register failed:', error);
+    }
+  };
+
   const onSubmitHandler: SubmitHandler<RegisterInput> = (values) => {
-    // 👇 Executing the RegisterUser Mutation
-    registerUser(values);
+    handleRegister(values)
   };
 
   return (
@@ -89,8 +110,6 @@ const SignUp = () => {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        height: '100vh',
-        backgroundColor: '#2363eb',
       }}
     >
       <Box
@@ -105,18 +124,15 @@ const SignUp = () => {
           textAlign='center'
           component='h1'
           sx={{
-            color: '#f9d13e',
             fontSize: { xs: '2rem', md: '3rem' },
             fontWeight: 600,
             mb: 2,
             letterSpacing: 1,
           }}
         >
-          Welcome to CodevoWeb!
-        </Typography>
-        <Typography component='h2' sx={{ color: '#e5e7eb', mb: 2 }}>
-          Sign Up To Get Started!
-        </Typography>
+                    <img src={blendIcon} className="h-8 me-3 rounded-full" />
+
+Blend        </Typography>
 
         <FormProvider {...methods}>
           <Box
@@ -149,15 +165,13 @@ const SignUp = () => {
 
             <LoadingButton
               variant='contained'
-              sx={{ mt: 1 }}
               fullWidth
               disableElevation
               type='submit'
               loading={isLoading}
             >
-            <LinkItem to='/feed' style={{ color: '#333' }}>
             Sign Up
-            </LinkItem>            </LoadingButton>
+            </LoadingButton>
           </Box>
         </FormProvider>
       </Box>

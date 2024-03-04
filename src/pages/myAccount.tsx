@@ -16,7 +16,7 @@ function MyAccount() {
       <h5 className="mb-2 text-1xl font-bold tracking-tight text-gray-900 dark:text-white">My posts:</h5>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
         {currUserPosts?.map(currUserPost => (
-          <Post _id={currUserPost._id} title={currUserPost.title} description={currUserPost.description} creatingUser={currUserPost.creatingUser} track={currUserPost.track}/>
+          <Post _id={currUserPost._id} title={currUserPost.title} description={currUserPost.description} creatingUser={currUserPost.creatingUser} track={currUserPost.track} image={currUserPost.image}/>
         ))}
     </div>
   </div>

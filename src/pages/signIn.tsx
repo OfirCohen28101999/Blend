@@ -92,7 +92,6 @@ function SignIn() {
   }, [isSubmitSuccessful, reset]);
 
   const onSubmitHandler: SubmitHandler<LoginInput> = (values) => {
-  //  loginUser(values);
    handleLogin(values);
   };
 
@@ -149,9 +148,7 @@ Blend       </Typography>
             loading={isLoading}
           >
             {/* <LinkItem to='/feed' style={{ color: '#333' }}> */}
-            {/* <a href="/feed" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white">Login</a> */}
             Login
-
             {/* </LinkItem> */}
 
           </LoadingButton>
@@ -161,9 +158,9 @@ Blend       </Typography>
           </Typography>
         </Box>
       </FormProvider>
-      {/* <Typography variant='h6' component='p' sx={{my: '1.5rem', textAlign: 'center', color: 'black',}}>
-        Log in with another provider:
-      </Typography> */}
+      <Typography variant='h6' component='p' sx={{my: '1.5rem', textAlign: 'center', color: 'black',}}>
+        Log in with Google:
+      </Typography>
       <Box
         maxWidth='27rem'
         width='100%'

@@ -87,6 +87,13 @@ export interface SessionProps {
 export interface secondpost {
   posts:PostProps[]
 }
+
+export interface secondpostcreate {
+  post:PostProps
+}
+export interface firstpostcreate {
+  data:secondpostcreate
+}
 export interface firstpost {
   data:secondpost
 }

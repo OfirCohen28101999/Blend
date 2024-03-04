@@ -10,17 +10,12 @@ const ProtectedRoute = () => {
 
   useEffect(() => {
 
-   const googleToken = localStorage.getItem('googleToken')
-    const token = localStorage.getItem('token')
-  //   // const auth = getAuth();
-  //   // const unsubscribe = onAuthStateChanged(auth, (user) => {
+   const googleToken = localStorage.getItem('googleToken');
+    const token = localStorage.getItem('token');
     if(token || googleToken){
       setIsLoggedIn(true);
     }
       setCheckingStatus(false);
-  //   });
-
-  //   return () => unsubscribe();
   }, []);
 
   if (checkingStatus) {
