@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Navigate, useLocation, Outlet } from 'react-router-dom';
 import { RoutesEnum } from './routes.enum';
 import NavBar from '../components/navBar';
+import FullScreenLoader from '../components/FullScreenLoader';
 
 const ProtectedRoute = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -19,13 +20,13 @@ const ProtectedRoute = () => {
   }, []);
 
   if (checkingStatus) {
-    return <div>Loading...</div>; // Or some other loading indicator
+    return <FullScreenLoader />; 
   }
 
   return isLoggedIn ? (
     <>
       <NavBar/>
-        <Outlet/>
+      <Outlet/>
     </>
   ) : (
     <Navigate to={RoutesEnum.SIGNIN} replace state={{ from: location }} />

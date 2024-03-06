@@ -3,14 +3,14 @@ import { useDeleteUserImageMutation, useUpdateMeMutation } from "../services/api
 import { getCurrentUserQuery } from "../shared/general";
 
 function ProfileInfo() {
+
   const [disableEdit, setDisableEdit] = useState(true);
+  const currentUser = getCurrentUserQuery();
 
   const handleToggle = () => {
     setDisableEdit((current) => !current);
   };
 
-  const currentUser = getCurrentUserQuery();
-  
   const [inputBio, setInputBio] = useState(currentUser?.bio ? currentUser?.bio : " ");
 
   const handleBioChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -18,7 +18,6 @@ function ProfileInfo() {
   };
 
   const [updateUserInfo ] = useUpdateMeMutation();
-
   const [image, setImage] = useState<File>();
 
   const updateUser = (e: any) => {
@@ -31,6 +30,7 @@ function ProfileInfo() {
     updateUserInfo(formData);
     handleToggle();
   }
+  
   const onInputChange = (e: any) => {
     setImage(e.target.files[0]);
   }

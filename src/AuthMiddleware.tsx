@@ -11,7 +11,7 @@ const AuthMiddleware: React.FC<IAuthMiddleware> = ({ children }) => {
   const [cookies] = useCookies(['logged_in']);
 
   const { isLoading } = userApi.endpoints.getMe.useQuery(null, {
-    skip: !cookies.logged_in, //????????????????????
+    skip: !cookies.logged_in, 
   });
 
   console.log('From middleware: ', cookies.logged_in);

@@ -52,17 +52,11 @@ const SignUp = () => {
     resolver: zodResolver(registerSchema),
   });
 
-  const [registerUser] =
-    useRegisterUserMutation();
-
-    const [loginUser, { isLoading, isSuccess }] =
-    useLoginUserMutation();
-    
+  const [registerUser] = useRegisterUserMutation();
+  const [loginUser, { isLoading, isSuccess }] = useLoginUserMutation();
   const navigate = useNavigate();
   const location = useLocation();
-
   const from = ((location.state as any)?.from.pathname as string) || '/feed';
-
   const {
     reset,
     handleSubmit,
@@ -85,9 +79,7 @@ const SignUp = () => {
     try {
       await registerUser(values);
       const loginResponse = await loginUser({email: values.email, password: values.password});
-
       if ('data' in loginResponse) {
-
         const token = loginResponse.data.access_token; 
         localStorage.setItem('token', token);
       }
@@ -104,74 +96,23 @@ const SignUp = () => {
   };
 
   return (
-    <Container
-      maxWidth={false}
-      sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-    >
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          flexDirection: 'column',
-        }}
-      >
-        <Typography
-          textAlign='center'
-          component='h1'
-          sx={{
-            fontSize: { xs: '2rem', md: '3rem' },
-            fontWeight: 600,
-            mb: 2,
-            letterSpacing: 1,
-          }}
-        >
-                    <img src={blendIcon} className="h-8 me-3 rounded-full" />
-
-Blend        </Typography>
-
+    <Container maxWidth={false} sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+      <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column'}}>
+        <Typography textAlign='center' component='h1' sx={{fontSize: { xs: '2rem', md: '3rem' }, fontWeight: 600, mb: 2, letterSpacing: 1}}>
+          <img src={blendIcon} className="h-8 me-3 rounded-full" /> Blend
+        </Typography>
         <FormProvider {...methods}>
-          <Box
-            component='form'
-            onSubmit={handleSubmit(onSubmitHandler)}
-            noValidate
-            autoComplete='off'
-            maxWidth='27rem'
-            width='100%'
-            sx={{
-              backgroundColor: '#e5e7eb',
-              p: { xs: '1rem', sm: '2rem' },
-              borderRadius: 2,
-            }}
-          >
+          <Box component='form' onSubmit={handleSubmit(onSubmitHandler)} noValidate autoComplete='off' maxWidth='27rem' width='100%' sx={{backgroundColor: '#e5e7eb', p: { xs: '1rem', sm: '2rem' }, borderRadius: 2}}>
             <FormInput name='name' label='Full Name' />
             <FormInput name='email' label='Email Address' type='email' />
             <FormInput name='password' label='Password' type='password' />
-            <FormInput
-              name='passwordConfirm'
-              label='Confirm Password'
-              type='password'
-            />
+            <FormInput name='passwordConfirm' label='Confirm Password' type='password'/>
             <FormInput name='bio' label='bio' />
-
             <Typography sx={{ fontSize: '0.9rem', mb: '1rem' }}>
               Already have an account?{' '}
               <LinkItem to='/login'>Login Here</LinkItem>
             </Typography>
-
-            <LoadingButton
-              variant='contained'
-              fullWidth
-              disableElevation
-              type='submit'
-              loading={isLoading}
-            >
-            Sign Up
-            </LoadingButton>
+            <LoadingButton variant='contained' fullWidth disableElevation type='submit' loading={isLoading}> Sign Up</LoadingButton>
           </Box>
         </FormProvider>
       </Box>

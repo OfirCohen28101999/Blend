@@ -8,7 +8,6 @@ export const getAllPostsQuery = () => {
   }).data?.data.posts as PostProps[] | undefined;
 };
 
-// : UserProps
 export const getCurrentUserQuery = () => {
   return userApi.endpoints.getMe.useQuery(null, {
     skip: false,

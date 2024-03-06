@@ -49,12 +49,9 @@ function SignIn() {
     resolver: zodResolver(loginSchema),
   });
 
-  const [loginUser, { isLoading, isSuccess }] =
-    useLoginUserMutation();
-
+  const [loginUser, { isLoading, isSuccess }] = useLoginUserMutation();
   const navigate = useNavigate();
   const location = useLocation();
-
   const from = ((location.state as any)?.from.pathname as string) || '/feed';
 
   const {
@@ -67,7 +64,6 @@ function SignIn() {
     try {
       const response = await loginUser(values);
       if ('data' in response) {
-
         const token = response.data.access_token; 
         localStorage.setItem('token', token);
       }
@@ -96,107 +92,35 @@ function SignIn() {
   };
 
   return (
-    <Container
-    maxWidth={false}
-    sx={{
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-    }}
-  >
-    <Box
-      sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        flexDirection: 'column',
-      }}
-    >
-      <Typography
-        textAlign='center'
-        component='h1'
-        sx={{
-          fontWeight: 600,
-          fontSize: { xs: '2rem', md: '3rem' },
-          mb: 2,
-          letterSpacing: 1,
-        }}
-      >
-  <img src={blendIcon} className="h-8 me-3 rounded-full" />
-
-Blend       </Typography>
-      <FormProvider {...methods}>
-        <Box
-          component='form'
-          onSubmit={handleSubmit(onSubmitHandler)}
-          noValidate
-          autoComplete='off'
-          maxWidth='27rem'
-          width='100%' sx={{ backgroundColor: '#e5e7eb', p: { xs: '1rem', sm: '2rem' }, borderRadius: 2}}
-        >
-          <FormInput name='email' label='Email Address' type='email' />
-          <FormInput name='password' label='Password' type='password' />
-
-          <Typography sx={{ fontSize: '0.9rem', mb: '1rem', textAlign: 'right' }}></Typography>
-
-          <LoadingButton
-            variant='contained'
-            sx={{ mt: 1 }}
-            fullWidth
-            disableElevation
-            type='submit'
-            loading={isLoading}
-          >
-            {/* <LinkItem to='/feed' style={{ color: '#333' }}> */}
-            Login
-            {/* </LinkItem> */}
-
-          </LoadingButton>
-
-          <Typography sx={{ fontSize: '0.9rem', mt: '1rem' }}>
-          Don’t have an account yet? <LinkItem to='/sign-up'>Sign Up Here</LinkItem>
-          </Typography>
+    <Container maxWidth={false} sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+      <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column'}}>
+        <Typography textAlign='center' component='h1' sx={{fontWeight: 600, fontSize: { xs: '2rem', md: '3rem' }, mb: 2, letterSpacing: 1}}>
+          <img src={blendIcon} className="h-8 me-3 rounded-full" /> Blend 
+        </Typography>
+        <FormProvider {...methods}>
+          <Box component='form' onSubmit={handleSubmit(onSubmitHandler)} noValidate autoComplete='off' maxWidth='27rem' width='100%' sx={{ backgroundColor: '#e5e7eb', p: { xs: '1rem', sm: '2rem' }, borderRadius: 2}}>
+            <FormInput name='email' label='Email Address' type='email' />
+            <FormInput name='password' label='Password' type='password' />
+            <Typography sx={{ fontSize: '0.9rem', mb: '1rem', textAlign: 'right' }}></Typography>
+            <LoadingButton variant='contained' sx={{ mt: 1 }} fullWidth disableElevation type='submit' loading={isLoading}>
+              Login
+            </LoadingButton>
+            <Typography sx={{ fontSize: '0.9rem', mt: '1rem' }}>
+              Don’t have an account yet? <LinkItem to='/sign-up'>Sign Up Here</LinkItem>
+            </Typography>
+          </Box>
+        </FormProvider>
+        <Typography variant='h6' component='p' sx={{my: '1.5rem', textAlign: 'center', color: 'black'}}>
+          Log in with Google:
+        </Typography>
+        <Box maxWidth='27rem' width='100%' sx={{backgroundColor: '#e5e7eb', p: { xs: '1rem', sm: '2rem' }, borderRadius: 2}}>
+          <MuiLink href={getGoogleUrl(from)} sx={{ backgroundColor: '#f5f6f7', borderRadius: 1, py: '0.6rem', columnGap: '1rem', textDecoration: 'none', color: '#393e45', cursor: 'pointer', fontWeight: 500, '&:hover': {backgroundColor: '#fff',boxShadow: '0 1px 13px 0 rgb(0 0 0 / 15%)'}}} display='flex' justifyContent='center' alignItems='center'>
+            <GoogleLogo style={{ height: '2rem' }} />
+            Google
+          </MuiLink>
         </Box>
-      </FormProvider>
-      <Typography variant='h6' component='p' sx={{my: '1.5rem', textAlign: 'center', color: 'black',}}>
-        Log in with Google:
-      </Typography>
-      <Box
-        maxWidth='27rem'
-        width='100%'
-        sx={{
-          backgroundColor: '#e5e7eb',
-          p: { xs: '1rem', sm: '2rem' },
-          borderRadius: 2,
-        }}
-      >
-        <MuiLink
-          href={getGoogleUrl(from)}
-          sx={{
-            backgroundColor: '#f5f6f7',
-            borderRadius: 1,
-            py: '0.6rem',
-            columnGap: '1rem',
-            textDecoration: 'none',
-            color: '#393e45',
-            cursor: 'pointer',
-            fontWeight: 500,
-            '&:hover': {
-              backgroundColor: '#fff',
-              boxShadow: '0 1px 13px 0 rgb(0 0 0 / 15%)',
-            },
-          }}
-          display='flex'
-          justifyContent='center'
-          alignItems='center'
-        >
-          <GoogleLogo style={{ height: '2rem' }} />
-          Google
-        </MuiLink>
       </Box>
-    </Box>
-  </Container>
-
+    </Container>
   );
 }
 

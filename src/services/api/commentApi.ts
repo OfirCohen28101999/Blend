@@ -1,6 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import customFetchBase from './customFetchBase';
-import { CommentProps, CreateCommentProps, firstcomment } from '../../shared/types';
+import { CommentProps, CreateCommentProps, FirstComment } from '../../shared/types';
 
 export const commentApi = createApi({
   reducerPath: 'commentApi',
@@ -16,20 +16,7 @@ export const commentApi = createApi({
         };
       },
     }),
-    // updateComment: builder.mutation<CommentProps, { id: string; post: FormData }>(
-    //   {
-    //     query({ id, post }) {
-    //       return {
-    //         url: `/post/${id}`,
-    //         method: 'PATCH',
-    //         credentials: 'include',
-    //         body: post,
-    //       };
-    //     },
-    //   }
-    // ),
-    // The query accepts a string and returns a CommentProps[]
-    getAllCommentsByPostId: builder.query<firstcomment, string>({
+    getAllCommentsByPostId: builder.query<FirstComment, string>({
       query(postId) {
         return {
           url: `/post/${postId}/comments`,
@@ -52,6 +39,5 @@ export const commentApi = createApi({
 export const {
   useCreateCommentMutation,
   useDeleteCommentMutation,
-//   useUpdateCommentMutation,
-  useGetAllCommentsByPostIdQuery,
+  useGetAllCommentsByPostIdQuery
 } = commentApi;

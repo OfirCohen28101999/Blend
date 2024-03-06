@@ -1,6 +1,6 @@
 import { ChangeEvent, useState } from "react";
 import { trackApi } from "../services/api/trackApi";
-import { PostProps, TrackProps, firstpost } from "../shared/types";
+import { PostProps, TrackProps } from "../shared/types";
 import { Modal } from 'flowbite-react';
 import { useCreatePostMutation, useUpdatePostMutation } from "../services/api/postApi";
 
@@ -15,7 +15,6 @@ export function Songs() {
   const [inputDescription, setInputDescription] = useState("");
   const [openModal, setOpenModal] = useState(false);
   const [createPost] = useCreatePostMutation();
-
 
   const handleChangeText = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setInputDescription(e.target.value);
@@ -45,6 +44,7 @@ export function Songs() {
       console.error('Error creating post:', result.error);
     }
   } 
+
 const [image, setImage] = useState<File>();
 
 const onInputChange = (e: any) => {
@@ -63,14 +63,14 @@ const onInputChange = (e: any) => {
       <Modal show={openModal} onClose={() => setOpenModal(false)}>
         <Modal.Header className="p-1 ml-3">Create Post</Modal.Header>
         <form onSubmit={createPostFunction} className='w-90 flex flex-row px-5 space-x-6 items-center'>
-        <Modal.Body>
-    <input type="file" accept="image/" onChange={onInputChange}/>
+          <Modal.Body>
+            <input type="file" accept="image/" onChange={onInputChange}/>
             <textarea id="title" className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write your title here..."  onChange={handleChangeTitle} value={inputTitle} required></textarea>
             <textarea id="text" className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write your text here..."  onChange={handleChangeText} value={inputDescription} required></textarea>
-        </Modal.Body>
-        <Modal.Footer>
-          <button type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-1/7 h-10 sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Post</button>       
-        </Modal.Footer>
+          </Modal.Body>
+          <Modal.Footer>
+            <button type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-1/7 h-10 sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Post</button>       
+          </Modal.Footer>
         </form>
       </Modal>
       </>
