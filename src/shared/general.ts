@@ -16,12 +16,12 @@ export const getCurrentUserQuery = () => {
 
 export const getCurrentUserPosts = (allPosts: PostProps[] | undefined, currentUser: any) => {
   return allPosts?.filter((postInfo: PostProps) => 
-    postInfo.creatingUser._id === currentUser?._id
+    postInfo?.creatingUser?._id === currentUser?._id
   ) as PostProps[] | undefined;
 };
 
 export const getNotCurrentUserPosts = (allPosts: PostProps[] | undefined, currentUser: any) => {
   return allPosts?.filter((postInfo: PostProps) => 
-    postInfo.creatingUser._id !== currentUser?._id
+    postInfo?.creatingUser?._id !== currentUser?._id
   ) as PostProps[] | undefined;
 };

@@ -64,7 +64,7 @@ function SignIn() {
     try {
       const response = await loginUser(values);
       if ('data' in response) {
-        const token = response.data.access_token; 
+        const token = response.data.accessToken; 
         localStorage.setItem('token', token);
       }
       else {
@@ -91,6 +91,10 @@ function SignIn() {
    handleLogin(values);
   };
 
+  const handleGoogleSignIn = () => {
+    window.location.href = getGoogleUrl(from);
+  };
+
   return (
     <Container maxWidth={false} sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
       <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column'}}>
@@ -114,10 +118,10 @@ function SignIn() {
           Log in with Google:
         </Typography>
         <Box maxWidth='27rem' width='100%' sx={{backgroundColor: '#e5e7eb', p: { xs: '1rem', sm: '2rem' }, borderRadius: 2}}>
-          <MuiLink href={getGoogleUrl(from)} sx={{ backgroundColor: '#f5f6f7', borderRadius: 1, py: '0.6rem', columnGap: '1rem', textDecoration: 'none', color: '#393e45', cursor: 'pointer', fontWeight: 500, '&:hover': {backgroundColor: '#fff',boxShadow: '0 1px 13px 0 rgb(0 0 0 / 15%)'}}} display='flex' justifyContent='center' alignItems='center'>
+          <LoadingButton onClick={handleGoogleSignIn} variant='contained' sx={{ mt: 1 }} fullWidth disableElevation >
             <GoogleLogo style={{ height: '2rem' }} />
             Google
-          </MuiLink>
+            </LoadingButton>
         </Box>
       </Box>
     </Container>

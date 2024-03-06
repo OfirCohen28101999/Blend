@@ -80,7 +80,7 @@ const SignUp = () => {
       await registerUser(values);
       const loginResponse = await loginUser({email: values.email, password: values.password});
       if ('data' in loginResponse) {
-        const token = loginResponse.data.access_token; 
+        const token = loginResponse.data.accessToken; 
         localStorage.setItem('token', token);
       }
       else {

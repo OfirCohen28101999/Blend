@@ -18,7 +18,7 @@ export const authApi = createApi({
       },
     }),
     loginUser: builder.mutation<
-      { access_token: string; status: string },
+      { accessToken: string; status: string },
       LoginInput
     >({
       query(data) {
