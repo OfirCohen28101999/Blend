@@ -110,7 +110,7 @@ const SignUp = () => {
             <FormInput name='bio' label='bio' />
             <Typography sx={{ fontSize: '0.9rem', mb: '1rem' }}>
               Already have an account?{' '}
-              <LinkItem to='/login'>Login Here</LinkItem>
+              <LinkItem to='/sign-in'>Login Here</LinkItem>
             </Typography>
             <LoadingButton variant='contained' fullWidth disableElevation type='submit' loading={isLoading}> Sign Up</LoadingButton>
           </Box>
