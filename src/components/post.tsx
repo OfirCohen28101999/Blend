@@ -62,6 +62,12 @@ export function Post(postInfo: PostProps) {
     createComment({description: inputComment, postId: postInfo._id, title: " "});
   }
 
+  const handleCancel = () => {
+    setInputTitle(postInfo.title);
+    setInputDescription(postInfo.description);
+    setOpenEditModal(false);
+  };
+
   const imgSrc= postInfo?.image ? `${process.env.REACT_APP_SERVER_ENDPOINT}/static/posts/${postInfo?.image}` : blendIcon;
 
   return (
@@ -108,7 +114,7 @@ export function Post(postInfo: PostProps) {
     <>
       <Modal show={openEditModal} onClose={() => setOpenEditModal(false)}> 
         <Modal.Header className="p-1 ml-3">Update Post</Modal.Header>
-        <form onSubmit={editPost} className='w-90 flex flex-row px-5 space-x-6 items-center'>
+        <form onSubmit={editPost} className='w-90 flex flex-col items-center'>
         <Modal.Body>
         <input type="file" accept="image/" onChange={onInputChange}/>
           <textarea id="title" className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write your title here..."  onChange={handleTitleChange} value={inputTitle}>{postInfo.title}</textarea>
@@ -117,7 +123,7 @@ export function Post(postInfo: PostProps) {
         <Modal.Footer>
           <div className="flex space-x-4">
             <button type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-1/7 h-10 sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Update</button>
-            <button type="button" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-1/7 h-10 sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={() => setOpenEditModal(false)}>Cancle</button>
+            <button type="button" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-1/7 h-10 sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={handleCancel}>Cancle</button>
           </div>
         </Modal.Footer>
         </form>

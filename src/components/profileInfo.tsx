@@ -8,6 +8,7 @@ function ProfileInfo() {
   const currentUser = getCurrentUserQuery();
 
   const handleToggle = () => {
+    setInputBio(currentUser?.bio ? currentUser?.bio : " ");
     setDisableEdit((current) => !current);
   };
 

@@ -51,6 +51,12 @@ const onInputChange = (e: any) => {
   setImage(e.target.files[0]);
 }
 
+  const handelCloseModal = () => {
+    setInputTitle("");
+    setInputDescription("");
+    setOpenModal(false)
+    };
+
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 gap-4 ml-40 pl-5 pt-16">
       {allTracks?.map((track: TrackProps) => (
@@ -60,9 +66,9 @@ const onInputChange = (e: any) => {
         </div>
       ))}
       <>
-      <Modal show={openModal} onClose={() => setOpenModal(false)}>
+      <Modal show={openModal} onClose={handelCloseModal}>
         <Modal.Header className="p-1 ml-3">Create Post</Modal.Header>
-        <form onSubmit={createPostFunction} className='w-90 flex flex-row px-5 space-x-6 items-center'>
+        <form onSubmit={createPostFunction} className='w-90 flex flex-col items-center'>
           <Modal.Body>
             <input type="file" accept="image/" onChange={onInputChange}/>
             <textarea id="title" className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write your title here..."  onChange={handleChangeTitle} value={inputTitle} required></textarea>
