@@ -60,6 +60,7 @@ export function Post(postInfo: PostProps) {
 
   function commentPost(): void {
     createComment({description: inputComment, postId: postInfo._id, title: " "});
+    setInputComment("");
   }
 
   const handleCancel = () => {

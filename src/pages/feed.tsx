@@ -11,7 +11,7 @@ export function Feed() {
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 gap-4 ml-40 pl-5 pt-16">
       {notCurrUserPosts?.map((notCurrUserPost: PostProps) => (
-        <Post _id= {notCurrUserPost._id} title = {notCurrUserPost.title} description = {notCurrUserPost.description} creatingUser = {notCurrUserPost.creatingUser} track={notCurrUserPost.track}/>
+        <Post _id= {notCurrUserPost._id} title = {notCurrUserPost.title} description = {notCurrUserPost.description} creatingUser = {notCurrUserPost.creatingUser} track={notCurrUserPost.track} image={notCurrUserPost.image}/>
       ))}
     </div>
   );
